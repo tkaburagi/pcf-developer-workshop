@@ -1,0 +1,40 @@
+# Deploying Simple Spring Boot
+
+## プロジェクトの作成
+
+## アプリケーションの編集
+`src/main/java/com/example/demo`に新しいファイル`Controller.java`を追加し下記のように編集します。
+
+```java
+package com.example.demo;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class Controller {
+
+    @RequestMapping("/hw")
+    public String helloWolrd() {
+        return "Hello world";
+    }
+
+}
+```
+
+```shell
+./mvnw package -Dmaven.test.skip=true
+```
+
+```shell
+java -jar target/demo-0.0.1-SNAPSHOT.jar
+```
+
+```shell
+curl localhost:8080/hw
+```
+
+## PCFにアプリケーションをpushする
+```shell
+cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
+```
