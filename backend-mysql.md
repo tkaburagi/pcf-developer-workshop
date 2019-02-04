@@ -24,7 +24,7 @@ cf create-service
 </dependency>
 ```
 
-`src/main/java/com/example/demo`に新しいファイル`Config.java`を追加し下記のように編集します。
+`src/main/java/com/example/demo`に新しいファイル`Book.java`を追加し下記のように編集します。
 ```java
 package com.example.demo;
 
@@ -100,7 +100,42 @@ public interface BookJpaRepository extends JpaRepository<Book, String> {
 }
 ```
 
-`src/main/resources`に新しいファイル`demo.sql`を追加し下記のように編集します。
+`src/main/java/com/example/demo`に新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
+```java
+package com.example.demo;
+
+import javax.sql.DataSource;
+
+import org.springframework.cloud.config.java.AbstractCloudConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+
+@Configuration
+@EnableJpaRepositories
+@Profile("cloud")
+public class DbCloudConfig extends AbstractCloudConfig {
+
+    @Bean
+    public DataSource dataSource() {
+        DataSource dataSource = connectionFactory().dataSource();
+
+        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
+        databasePopulator.addScript(new ClassPathResource("sql/demo.sql"));
+
+        DatabasePopulatorUtils.execute(databasePopulator, dataSource);
+
+        return dataSource;
+    }
+
+}
+```
+
+`src/main/resources`に新しいフォルダ`sql`を作成します。そこに`demo.sql`を追加し下記のように編集します。
 ```sql
 CREATE TABLE book
 (
