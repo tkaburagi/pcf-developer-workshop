@@ -5,6 +5,7 @@
 * Grafanaでモニタリングする
 * ELKにでロギングする
 * Web UIアプリをデプロイする
+* Config ServerとCircuit Breakerを導入する
 * セッションをPCCにキャッシュする
 * Zipkinを導入する
 * APMツールを利用する
