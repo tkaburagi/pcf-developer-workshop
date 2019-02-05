@@ -5,7 +5,7 @@ cf marketplace
 ```
 
 ```shell
-cf create-service
+cf create-service p.mysql small mysql
 ```
 
 `pom.xml`に以下を追記します。
@@ -21,6 +21,10 @@ cf create-service
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-spring-service-connector</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-cloudfoundry-connector</artifactId>
 </dependency>
 ```
 
@@ -95,8 +99,6 @@ import org.springframework.stereotype.Repository;
 @Repository("BookJpaRepository")
 public interface BookJpaRepository extends JpaRepository<Book, String> {
 
-    Book findBookById(final String id);
-
 }
 ```
 
@@ -135,9 +137,44 @@ public class DbCloudConfig extends AbstractCloudConfig {
 }
 ```
 
+`Controller.java`を下記のように編集します。
+```java
+package com.example.demo;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class Controller {
+
+    @Autowired
+    BookJpaRepository bookJpaRepository;
+
+    @RequestMapping("/hw")
+    public String helloWolrd() {
+        return "Hello world";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/allbook")
+    public String getAllBook() throws Exception{
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonStr = mapper.writeValueAsString(bookJpaRepository.findAll());
+
+        return jsonStr;
+    }
+}
+```
+
+
 `src/main/resources`に新しいフォルダ`sql`を作成します。そこに`demo.sql`を追加し下記のように編集します。
 ```sql
-CREATE TABLE book
+DROP TABLE IF EXISTS book;
+
+CREATE TABLE IF NOT EXISTS book
 (
 id VARCHAR(11),
 title VARCHAR(64),
@@ -167,13 +204,13 @@ values ("5", "Pivotal Cloud Foundry Deep Dive", "Pivotal Japan", "8900");
 ```
 
 ```shell
-cf push --no-start
+./mvnw clean package -DskipTests=true && cf push -p target/demo-0.0.1-SNAPSHOT.jar --no-start
 ```
 
 ```shell
-cf bind-service
+cf bind-service api-tkaburagi mysql
 ```
 
 ```shell
-cf start
+cf start api-tkaburagi
 ```
