@@ -157,15 +157,12 @@ public class Controller {
     public String helloWolrd() {
         return "Hello world";
     }
-
     @RequestMapping(method = RequestMethod.GET, value = "/allbook")
     public String getAllBook() throws Exception{
 
         ObjectMapper mapper = new ObjectMapper();
-        String jsonStr = mapper.writeValueAsString(bookJpaRepository.findAll());
-
-        return jsonStr;
-    }
+        return mapper.writeValueAsString(bookJpaRepository.findAll());
+ 
 }
 ```
 
