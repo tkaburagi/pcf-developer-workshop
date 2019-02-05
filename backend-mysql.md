@@ -127,7 +127,7 @@ public class DbCloudConfig extends AbstractCloudConfig {
         DataSource dataSource = connectionFactory().dataSource();
 
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-        databasePopulator.addScript(new ClassPathResource("sql/demo.sql"));
+        databasePopulator.addScript(new ClassPathResource("demo.sql"));
 
         DatabasePopulatorUtils.execute(databasePopulator, dataSource);
 
@@ -162,7 +162,7 @@ public class Controller {
 
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(bookJpaRepository.findAll());
- 
+
 }
 ```
 

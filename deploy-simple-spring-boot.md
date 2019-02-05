@@ -38,3 +38,5 @@ curl localhost:8080/hw
 ```shell
 cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 ```
+
+## Exploring cf cli and Apps Manager
