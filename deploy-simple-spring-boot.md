@@ -39,4 +39,15 @@ curl localhost:8080/hw
 cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 ```
 
+`manifest.yml`を追加して以下のように編集します。
+```yaml
+applications:
+- name: api-tkaburagi
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git#v4.16
+  path: target/demo-0.0.1-SNAPSHOT.jar
+  memory: 1g
+  env:
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
+```
+
 ## Exploring cf cli and Apps Manager
