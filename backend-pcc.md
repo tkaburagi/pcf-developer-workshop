@@ -27,6 +27,10 @@ $ gfsh> list regions
     <groupId>org.springframework.geode</groupId>
     <artifactId>spring-geode-starter</artifactId>
 </dependency>
+<dependency>
+    <groupId>org.springframework.session</groupId>
+    <artifactId>spring-session-data-gemfire</artifactId>
+</dependency>
 ```
 `Book.java` を下記のように編集します。
 
@@ -40,4 +44,3 @@ public class Book {
 ```
 
 `CloudCacheConfig.java`を追加し、下記のように編集します。
-
