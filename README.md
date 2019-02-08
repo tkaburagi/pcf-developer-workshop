@@ -8,5 +8,5 @@
 * Circuit Breakerを導入する　済
 * セッションをPCCにキャッシュする
 * Zipkinを導入する
-* APMツールを利用する
+* APMツールを利用する　済
 * ConcourseでCIする
