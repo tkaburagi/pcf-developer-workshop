@@ -6,7 +6,7 @@
 * ELKにでロギングする　済
 * Web UIアプリをデプロイする　済
 * Circuit Breakerを導入する　済
-* セッションをPCCにキャッシュする
+* セッションをPCCにキャッシュする　済
 * Zipkinを導入する
 * APMツールを利用する　済
 * ConcourseでCIする
