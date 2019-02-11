@@ -381,7 +381,7 @@ gfsh> list regions
 ```
 
 ```console
-$ curl api-tkaburagi.apps.pcf.pcflab.jp/allbooks | jq 
+$ curl api-tkaburagi.apps.pcf.pcflab.jp/book?id=1 | jq 
 {
   "id": "1",
   "title": "What's Pivotal",
@@ -391,5 +391,42 @@ $ curl api-tkaburagi.apps.pcf.pcflab.jp/allbooks | jq
 }
 ```
 
-初回のアクセスのため、CacheMissが発生し、MySQLにデータを取りに行くことがわかります。
+初回のアクセスのため、CacheMissが発生し、MySQLにデータを取りに行くことがわかります。次にPulseに戻り再度同じクエリーを実行してみましょう。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/pulse-3.png)
 
+PCCにデータがキャッシュされていることがわかるはずです。再度アプリケーションにアクセスしてみます。
+```console
+$ curl api-tkaburagi.apps.pcf.pcflab.jp//book?id=1 | jq 
+{
+  "id": "1",
+  "title": "What's Pivotal",
+  "author_name": "Rob Mee",
+  "price": "1500",
+  "ds": "PCC"
+}
+```
+キャッシュからデータが取得されていることがわかります。ローカルのメモリから取得していないことを確認するため、アプリケーションを再起動して、再度アクセスしてみます。
+```shell
+cf restart
+```
+キャッシュからデータが取得されていることを確認します。再起動してもデータは残っており、外部のメモリデータストアからデータを取得されていることがわかります。
+```console
+$ curl api-tkaburagi.apps.pcf.pcflab.jp//book?id=1 | jq 
+{
+  "id": "1",
+  "title": "What's Pivotal",
+  "author_name": "Rob Mee",
+  "price": "1500",
+  "ds": "PCC"
+}
+```
+
+**ここまで完了したら進捗シートにチェックをしてください。**
+
+ID: 1-5のデータが入っていますので、他のデータでも試してみましょう。GemFire内のデータを削除するには
+```shell
+gfsh> remove --region=book --key=<ID>
+```
+で削除できます。
+
+PCCにはインメモリキャッシュの機能だけではなく`Continuous Query`やWANレプリケーションなど様々な機能が用意されています。
