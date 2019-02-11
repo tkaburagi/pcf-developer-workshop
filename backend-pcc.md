@@ -365,13 +365,31 @@ gfsh> create region --name=book --type=REPLICATE
 gfsh> list regions
 ```
 
-次にWebクライアントのPulseでGUI上で見てみます。Webブラウザを開いてサービスキーから取得できる`url.pulse`にアクセスしてください。ユーザ名とパスワードは同じです。
+次にWebクライアントのPulseでGUI上で見てみます。Webブラウザを開いてサービスキーから取得できる`url.pulse`にアクセスしてください。ユーザ名とパスワードは同じです。ログインすると以下の画面が見えます。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/pulse-1.png)
 
+`Data Browser`をクリックします。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/pulse-2.png)
 
+`QUERY EDITOR`に以下のクエリーを入力し、出力結果を確認します。
 
+`select * from /book` 
 
+データがないためなにも出力されないことがわかります。次にアプリケーションをpushします。
 ```shell
 ./mvnw clean package -DskipTests=true && cf push
 ```
 
+```console
+$ curl api-tkaburagi.apps.pcf.pcflab.jp/allbooks | jq 
+{
+  "id": "1",
+  "title": "What's Pivotal",
+  "author_name": "Rob Mee",
+  "price": "1500",
+  "ds": "MYSQL"
+}
+```
+
+初回のアクセスのため、CacheMissが発生し、MySQLにデータを取りに行くことがわかります。
 
