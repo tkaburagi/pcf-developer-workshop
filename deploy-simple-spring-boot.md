@@ -1,45 +1,189 @@
 # Deploying Simple Spring Boot
 
-## уГЧуГнуВ╕уВзуВпуГИуБоф╜ЬцИР
+## е╫еэе╕езепе╚д╬╫ў│╔
+еве╫еъе▒й`е╖ечеєдЄ`git clone`д╖д▐д╣бг
+╚╬╥тд╬е╟егеьепе╚еъд╟╥╘╧┬д╬е│е▐еєе╔дЄМg╨╨д╖д╞дпд└д╡ддбг
 
-## уВвуГЧуГкуВ▒уГ╝уВ╖уГзуГ│уБоч╖ищЫЖ
-`src/main/java/com/example/demo`уБлцЦ░уБЧуБДуГХуВбуВдуГл`Controller.java`уВТш┐╜хКауБЧф╕ЛшиШуБоуВИуБЖуБлч╖ищЫЖуБЧуБ╛уБЩуАВ
+```console
+$ mkdir pcf-workshop
+$ cd pcf-workshop
+$ git clone https://github.com/tkaburagi/hello-cf
+$ cd hello-cf
+```
+
+`pom.xml`дЄ┤╬д╬дшджд╦╛О╝пд╖д▐д╣бг
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.2.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.example</groupId>
+    <artifactId>demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>demo</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>http://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+
+## еве╫еъе▒й`е╖ечеєд╬╛О╝п
+`src/main/java/com/example/demo`д╦`Controller`е╤е├е▒й`е╕дЄ╫ўдъд╜д╬╧┬д╦╨┬д╖дде╒ебедеы`ApiController.java`дЄ╫╖╝╙д╖╧┬╙Ыд╬дшджд╦╛О╝пд╖д▐д╣бг
+import╬─дмдядлдщд╩ддИЎ║╧д╧═ъ│╔░цдЄ▓╬╒╒д╖д╞дпд└д╡ддбг
 
 ```java
-package com.example.demo;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 public class Controller {
 
-    @RequestMapping("/hw")
+	ObjectMapper mapper = new ObjectMapper();
+
+    @RequestMapping("/")
     public String helloWolrd() {
-        return "Hello world";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message","Helloworld V1");
+        jsonObject.put("index", System.getenv("CF_INSTANCE_INDEX"));
+        jsonObject.put("host", System.getenv("CF_INSTANCE_IP"));
+        return jsonObject.toString();
     }
 
 }
 ```
 
+╫ўд├д┐еве╫еъдЄе╙еые╔д╖бвеэй`елеыд╟╝┌ГPд╡д╗д╞д▀д▐д╣бг
 ```shell
 ./mvnw package -Dmaven.test.skip=true
-```
-
-```shell
 java -jar target/demo-0.0.1-SNAPSHOT.jar
 ```
 
 ```shell
-curl localhost:8080/hw
+curl localhost:8080/ | jq
 ```
 
-## PCFуБлуВвуГЧуГкуВ▒уГ╝уВ╖уГзуГ│уВТpushуБЩуВЛ
+╥╘╧┬д╬дшджд╩еье╣е▌еєе╣дм╖╡д├д╞└┤дьд╨│╔╣жд╟д╣бг
+```json
+{
+  "message": "Helloworld V1",
+  "index": "0",
+  "host": "192.168.16.42"
+}
+```
+
+## PCFд╦еве╫еъе▒й`е╖ечеєдЄpushд╣ды
+┤╬д╦`cf push`дЄ╩╣д├д╞еве╫еъе▒й`е╖ечеєдЄPCF╔╧д╦е╟е╫еэедд╖д▐д╣бг`cf target`д╟еэе░едеєдм│Ў└┤д╞дддыд│д╚дЄ┤_╒Jд╖д╞дпд└д╡ддбг
 ```shell
 cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 ```
 
-`manifest.yml`уВТш┐╜хКауБЧуБжф╗еф╕ЛуБоуВИуБЖуБлч╖ищЫЖуБЧуБ╛уБЩуАВ
+`tkaburagi`д╬▓┐╖╓д╧╫╘╔эд╬STUDENT_IDд╦╓├днУQдид╞дпд└д╡ддбг═мд╕еье╣е▌еєе╣дме╡й`е╨длдщ╖╡д├д╞дпдыд╟д╖дчджбг
+```shell
+curl https://api-tkaburagi.apps.pcfone.io | jq
+```
+
+╥╘╔╧д╟╫ю│їеве╫еъе▒й`е╖ечеєд╬е╟е╫еэедд╧╜K┴╦д╟д╣бг
+
+**д│д│д▐д╟═ъ┴╦д╖д┐дщ▀MТ├е╖й`е╚д╦е┴езе├епдЄд╖д╞дпд└д╡ддбг**
+
+
+## Exploring cf cli and Apps Manager
+д│д│д╟д╧дддпд─длд╬╗∙▒╛╡─д╩cf cliдЄ╩╣д├д╞еве╫еъе▒й`е╖ечеєдЄ▓┘╫ўд╖д╞д▀д▐д╣бг
+
+### ╗∙▒╛╡─д╩cf cli
+еве╫еъе▒й`е╖ечеєдЄе╣е▒й`еыевеже╚д╖д┐ддд╚днд╧бв`cf scale`е│е▐еєе╔дЄ└√╙├д╖д▐д╣бг
+```shell
+cf scale -i 2
+curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
+```
+`curl`е│е▐еєе╔дЄ║╬╢╚дл▀╡ддд╞дпд└д╡ддбгеве╫еъе▒й`е╖ечеєдме╣е▒й`еыевеже╚д╖бв`index`д╦МЭд╖д╞╪У║╔╖╓╔вд╖д╞дддыд│д╚дмдядлдъд▐д╣бгд▐д┐╕ўедеєе╣е┐еєе╣дме█е╣е╚д╡дьд╞ддды`host`д╬ВОдтindexд┤д╚д╦Йф╗пд╖д╞дддыд│д╚дт┤_╒Jд╖д╞д▀д▐д╖дчджбг
+
+┤╬д╦бв`cf logs` дЄ╩╣д├д╞еве╫еъд╬еэе░дЄ╚б╡├д╖д▐д╣бг
+```shell
+cf logs api-tkaburagi --recent
+```
+`--recent`еке╫е╖ечеєдЄд─д▒дыд╚Loggregatorд╦е╨е├е╒ебд╡дьд╞дддыбв╫ю╜№д╬еэе░дЄе└еєе╫д╟днд▐д╣бг
+```shell
+cf logs api-tkaburagi
+```
+еке╫е╖ечеєд╩д╖д└д╚бвеэе░дме╣е╚еъй`е▀еєе░д╡дьд▐д╣бгд│д╬╫┤СBд╟Дeе┐й`е▀е╩еыд╟`curl`е│е▐еєе╔дЄМg╨╨д╖еве╫еъд╬еиеєе╔е▌едеєе╚д╦евепе╗е╣д╖д╞д▀д╞дпд└д╡ддбг
+
+logдме╣е╚еъй`е▀еєе░д╡дьд╞дддыд│д╚дмдядлдъд▐д╣бгPCFд╟д╧еве╫еъеэе░д└д▒д╟д╧д╩дпбве╡й`е╨еэе░дфевепе╗е╣еэе░д╩д╔дЄЕз╝пд╖д▐д╣бг
+
+д╜д╬╦√д╦дт`cf apps`дф`cf app api-tkaburagi`д╩д╔дЄМg╨╨д╣дыд╚╫╘╖╓д╬е╞е╩еєе╚д╬еве╫еъ╥╗╙Eдф1еве╫еъд╬╘Ф╝Ъд╩╟щИєдм╥Кдьд▐д╣бг
+```shell
+cf apps
+cf app api-tkaburagi
+```
+
+`cf -h`дЄМg╨╨д╣дыд╚е╪еые╫дЄ▒э╩╛д╟днд▐д╣д╬д╟бвХrщgд╬двды╖╜д╧╔лбйд╩е│е▐еєе╔дЄ╘Зд╖д╞д▀д╞дпд└д╡ддбг
+
+### е▐е╦е╒езе╣е╚дЄ╩╣д├д┐е╟е╫еэед
+╥╘╧┬дЄМg╨╨д╖бв╥╗╢╚еве╫еъдЄ╧ў│¤д╖д▐д╣бв
+```shell
+cf delete api-tkaburagi
+cf apps
+```
+`cf apps`дЄМg╨╨д╣дыд╚еве╫еъдм╧ў│¤д╡дьд╞дддыд│д╚дмдядлдыд╟д╖дчджбг
+
+┤╬д╦бве╫еэе╕езепе╚е╟егеьепе╚еъ╓▒╧┬д╦`manifest.yml`дЄ╫╖╝╙д╖д╞╥╘╧┬д╬дшджд╦╛О╝пд╖д▐д╣бг
+`- name:`дЄapi-<STUDENT_ID>д╦д╩дыдшджХ°днУQдид╞дпд└д╡ддбг
 ```yaml
 applications:
 - name: api-tkaburagi
@@ -50,4 +194,14 @@ applications:
     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
 ```
 
-## Exploring cf cli and Apps Manager
+╧╚д█д╔д╧`cf push`д╬еке╫е╖ечеєдЄ╩╣д├д╞еве╫еъдЄе╟е╫еэедд╖д▐д╖д┐дмбвmanifestдЄ╩╣д├д╞е╟е╫еэедд╖д▐д╣бгд│д│д╟д╧еве╫еъе▒й`е╖ечеє├√бве╙еые╔е╤е├епбвеве╫еъд╬е╤е╣дф└√╙├д╣дыJREд╬е╨й`е╕ечеєд╩д╔дЄ╓╕╢ид╖д╞ддд▐д╣бг
+
+```shell
+cf push
+```
+д│д╬е▐е╦е╒езе╣е╚дЄелеьеєе╚е╟егеьепе╚еъд╦╓├дн`cf push`д╣дыд╚е╟егеьепе╚еъ╓▒╧┬д╬manifestдЄ╒iд▀▐zд▀бвеве╫еъдме╟е╫еэедд╡дьд▐д╣бгд▐д┐бв`cf push -f path/tomanifest.yml`д╬дшджд╩╨╬д╟е▐е╦е╒езе╣е╚дЄ╓╕╢ид╣дыд│д╚дтд╟днд▐д╣бг
+
+**д│д│д▐д╟═ъ┴╦д╖д┐дщ▀MТ├е╖й`е╚д╦е┴езе├епдЄд╖д╞дпд└д╡ддбг**
+
+### PCF Apps Managerд╬└√╙├
+Webе╓ещеже╢д╟`https://apps.sys.pcf.pcflab.jp`д╦евепе╗е╣д╖бвcf cliд╚═мШФд╦еэе░едеєд╖д╞дпд└д╡ддбгд│д╬╩╓эШд╧╓vОЯд╚╥╗╛wд╦е╓ещеже╢дЄ▓┘╫ўд╖д▐д╣бг┤¤д├д╞ддды╖╜д╧╫╘╙╔д╦╩╣д├д╞╥Кд╞дпд└д╡ддбг

@@ -1,107 +1,59 @@
 # Using MySQL for PCF
+ここではMarkeplace上のMySQL for Pivotal Cloud Foundryを利用し、Spring BootのアプリケーションからMySQLを扱います。
 
-```shell 
-cf marketplace
+## MySQLインスタンスを作成
+
+`cf marketplace`コマンドで
+```console 
+$ cf marketplace
+Getting services from marketplace in org pivot-tkaburagi / space playground as tkaburagi@pivotal.io...
+OK
+
+service                       plans                                                                                                                                                                                   description
+apigee-edge                   org, microgateway, microgateway-coresident                                                                                                                                              Apigee Edge API Platform
+app-autoscaler                standard                                                                                                                                                                                Scales bound applications in response to load
+credhub                       default                                                                                                                                                                                 Stores configuration parameters securely in CredHub
+metrics-forwarder             unlimited                                                                                                                                                                               Custom metrics service
+
+p-cloudcache                  extra-small, dev-plan, small-footprint                                                                                                                                                  Pivotal Cloud Cache offers the ability to deploy a GemFire cluster as a service in Pivotal Cloud Foundry.
+
+p-rabbitmq                    standard                                                                                                                                                                                RabbitMQ service to provide shared instances of this high-performance multi-protocol messaging broker.
+p-redis                       shared-vm                                                                                                                                                                               Redis service to provide pre-provisioned instances configured as a datastore, running on a shared VM.
+
+p.mysql                       db-small                                                                                                                                                                                Dedicated instances of MySQL
+p.rabbitmq                    single-node-3.7                                                                                                                                                                         RabbitMQ service to provide dedicated instances of this high-performance multi-protocol messaging broker
+p.redis                       cache-small                                                                                                                                                                             Redis service to provide on-demand dedicated instances configured as a cache.
+postgresql-10-odb             standalone, general                                                                                                                                                                     Crunchy PostgreSQL 10 On-Demand Managed Service
 ```
 
+`cf create-service`コマンドでサービスインスタンスを作成します。`cf create-service <Service Nama> <Plan Nanme> <Service Instance Name`でSevice Brokerを使ってサービスインスタンスをプロビジョニングできます。
 ```shell
 cf create-service p.mysql small mysql
 ```
+作成にはしばらく時間がかかりますので、待っている間次に進んでください。
 
-`pom.xml`に以下を追記します。
+## アプリケーションの修正
+`api-tkaburagi`のアプリを修正します。まずは`pom.xml`に以下を追記します。`<dependency> </dependency`>のエントリに以下を追加します。
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.2.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-    <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>Demo project for Spring Boot</description>
-
-    <properties>
-        <java.version>11</java.version>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-spring-service-connector</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-cloudfoundry-connector</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.geode</groupId>
-            <artifactId>spring-gemfire-starter</artifactId>
-            <version>1.0.0.M3</version>
-        </dependency>
-    </dependencies>
-
-    <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/libs-milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-releases</id>
-            <name>Spring Releases</name>
-            <url>http://repo.spring.io/release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
-</project>
-
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-spring-service-connector</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-cloudfoundry-connector</artifactId>
+</dependency>
 ```
 
-`src/main/java/com/example/demo`に新しいファイル`Book.java`を追加し下記のように編集します。
+`src/main/java/com/example/demo`に`Entity`パッケージを作成し、新しいファイル`Book.java`を追加し下記のように編集します。
 ```java
 package com.example.demo;
 
@@ -153,8 +105,9 @@ public class Book {
     }
 }
 ```
-`src/main/java/com/example/demo`に新しいファイル`BookJpaRepository.java`を追加し下記のように編集します。
+`src/main/java/com/example/demo`に`repository/jpa`パッケージを作成し、新しいファイル`BookJpaRepository.java`を追加し下記のように編集します。
 ```java
+import com.example.demo.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -164,10 +117,8 @@ public interface BookJpaRepository extends JpaRepository<Book, String> {
 }
 ```
 
-`src/main/java/com/example/demo`に新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
+`src/main/java/com/example/demo`に`Config`パッケージを作成し、新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
 ```java
-package com.example.demo;
-
 import javax.sql.DataSource;
 
 import org.springframework.cloud.config.java.AbstractCloudConfig;
@@ -199,10 +150,8 @@ public class DbCloudConfig extends AbstractCloudConfig {
 }
 ```
 
-`Controller.java`を下記のように編集します。
+`ApiController.java`を下記のように編集します。
 ```java
-package com.example.demo;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -215,10 +164,17 @@ public class Controller {
     @Autowired
     BookJpaRepository bookJpaRepository;
 
-    @RequestMapping("/hw")
+    ObjectMapper mapper = new ObjectMapper();
+
+    @RequestMapping("/")
     public String helloWolrd() {
-        return "Hello world";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message","Helloworld V2");
+        jsonObject.put("index", System.getenv("CF_INSTANCE_INDEX"));
+        jsonObject.put("host", System.getenv("CF_INSTANCE_IP"));
+        return jsonObject.toString();
     }
+
     @RequestMapping(method = RequestMethod.GET, value = "/allbook")
     public String getAllBook() throws Exception{
 
@@ -262,14 +218,152 @@ INSERT INTO book
 values ("5", "Pivotal Cloud Foundry Deep Dive", "Pivotal Japan", "8900");
 ```
 
-```shell
-./mvnw clean package -DskipTests=true && cf push -p target/demo-0.0.1-SNAPSHOT.jar --no-start
+**ここまで完了したら進捗シートにチェックをしてください。**
+
+
+## アプリケーションのデプロイ
+まず先ほどのインスタンスが作成完了しているかを確認します。
+```console
+$ cf service mysql                               
+
+Service instance: mysql
+Service: p.mysql
+Bound apps: api-tkaburagi
+Tags:
+Plan: db-small
+Description: Dedicated instances of MySQL
+Documentation url: https://docs.pivotal.io/p-mysql/2-5/use.html
+Dashboard:
+
+Last Operation
+Status: create succeeded
+Message: Instance provisioning completed
+Started: 2019-02-04T06:39:05Z
+Updated: 2019-02-04T06:43:09Z
 ```
 
+`Status`が`create succeeeded`になっていることを確認します。`provisioning`になっていたら完了するまで待ってください。
+
+アプリケーションをビルドして、アプリケーションをデプロイします。`--no-start`オプションをつけて、アプリケーションを起動せずにpushします。
+```shell
+./mvnw clean package -DskipTests=true && cf push --no-start
+```
+
+次に、`cf bind-service`でMySQLインスタンスの接続情報をアプリケーションの環境変数にバインドします。
 ```shell
 cf bind-service api-tkaburagi mysql
 ```
 
+`cf env`でセットされている環境変数を確認します。
+```console
+$ cf env api-tkaburagi
+Getting env variables for app api-tkaburagi in org pivot-tkaburagi / space playground as tkaburagi@pivotal.io...
+OK
+
+System-Provided:
+{
+ "VCAP_SERVICES": {
+  "p.mysql": [
+   {
+    "binding_name": null,
+    "credentials": {
+     "hostname": "q-n4s3y1.q-g35863.bosh",
+     "jdbcUrl": "jdbc:mysql://q-n4s3y1.q-g35863.bosh:3306/service_instance_db?user=bee3188c58be4e618e39b321c1ff9431\u0026password=plyfd8s81h923auf\u0026useSSL=false",
+     "name": "service_instance_db",
+     "password": "plyfd8s81h923auf",
+     "port": 3306,
+     "uri": "mysql://bee3188c58be4e618e39b321c1ff9431:plyfd8s81h923auf@q-n4s3y1.q-g35863.bosh:3306/service_instance_db?reconnect=true",
+     "username": "bee3188c58be4e618e39b321c1ff9431"
+    },
+    "instance_name": "mysql",
+    "label": "p.mysql",
+    "name": "mysql",
+    "plan": "db-small",
+    "provider": null,
+    "syslog_drain_url": null,
+    "tags": [
+     "mysql"
+    ],
+    "volume_mounts": []
+   }
+  ]
+ }
+}
+
+{
+ "VCAP_APPLICATION": {
+  "application_id": "3c9a5cab-410f-4bba-bfe1-73b591fd0fdb",
+  "application_name": "api-tkaburagi",
+  "application_uris": [
+   "api-tkaburagi.apps.pcfone.io",
+  ],
+  "application_version": "bd2edf8c-41fd-4161-b251-05202874f76d",
+  "cf_api": "https://api.run.pcfone.io",
+  "limits": {
+   "disk": 1024,
+   "fds": 16384,
+   "mem": 1024
+  },
+  "name": "api-tkaburagi",
+  "space_id": "974f9813-cf0d-498f-83a5-103b33ceb8be",
+  "space_name": "playground",
+  "uris": [
+   "api-tkaburagi.apps.pcfone.io",
+  ],
+  "users": null,
+  "version": "bd2edf8c-41fd-4161-b251-05202874f76d"
+ }
+}
+
+User-Provided:
+JBP_CONFIG_OPEN_JDK_JRE: { jre: { version: 11.0.+}}
+
+No running env variables have been set
+
+No staging env variables have been set
+```
+
+JDBCのURIパスワード、ユーザ名などがセットされていることがわかります。この環境変数はアプリケーションの起動時に読み込まれます。アプリケーションを`cf start`で起動します。
 ```shell
 cf start api-tkaburagi
 ```
+
+起動したらアプリケーションのエンドポイントにリクエストを送り、デーベースからの値を取得します。
+以下のような結果が得られるでしょう。
+```console
+$ curl api-tkaburagi.apps.pcf.pcflab.jp/allbooks | jq                                               
+[
+  {
+    "id": "1",
+    "title": "What's Pivotal",
+    "author_name": "Rob Mee",
+    "price": "1500"
+  },
+  {
+    "id": "2",
+    "title": "eXtream Programming",
+    "author_name": "Kent Beck",
+    "price": "1200"
+  },
+  {
+    "id": "3",
+    "title": "Site Reliability Engineering",
+    "author_name": "Google",
+    "price": "5600"
+  },
+  {
+    "id": "4",
+    "title": "Introduction of Concourse CI",
+    "author_name": "Pivotal CI Team",
+    "price": "4900"
+  },
+  {
+    "id": "5",
+    "title": "Pivotal Cloud Foundry Deep Dive",
+    "author_name": "Pivotal Japan",
+    "price": "8900"
+  }
+]
+```
+
+**ここまで完了したら進捗シートにチェックをしてください。**
