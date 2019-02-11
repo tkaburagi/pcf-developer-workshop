@@ -36,3 +36,7 @@ space:          development
 ```
 
 今回は"handson-<STUDENT_ID>"というorganizationと"development"というspaceを利用します。
+
+# ドキュメント
+* [進捗確認シート](https://docs.google.com/spreadsheets/d/1pSoTiZ3pL4wzOwpTHmEixJxVbbtfOfNP5_bxAH6KU3w/edit?usp=sharing)
+* [説明資料]()
