@@ -1,8 +1,8 @@
 # Deploying Simple Spring Boot
 
-## �ץ��������Ȥ�����
-���ץꥱ�`������`git clone`���ޤ���
-����Υǥ��쥯�ȥ�����¤Υ��ޥ�ɤ�g�Ф��Ƥ���������
+## プロジェクトの作成
+アプリケーションを`git clone`します。
+任意のディレクトリで以下のコマンドを実行してください。
 
 ```console
 $ mkdir pcf-workshop
@@ -11,7 +11,7 @@ $ git clone https://github.com/tkaburagi/hello-cf
 $ cd hello-cf
 ```
 
-`pom.xml`��ΤΤ褦�˾������ޤ���
+`pom.xml`を次のように編集します。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -86,9 +86,9 @@ $ cd hello-cf
 </project>
 ```
 
-## ���ץꥱ�`�����ξ���
-`src/main/java/com/example/demo`��`Controller`�ѥå��`�������ꤽ���¤��¤����ե�����`ApiController.java`��׷�Ӥ���ӛ�Τ褦�˾������ޤ���
-import�Ĥ��狼��ʤ����Ϥ���ɰ����դ��Ƥ���������
+## アプリケーションの編集
+`src/main/java/com/example/demo`に`Controller`パッケージを作りその下に新しいファイル`ApiController.java`を追加し下記のように編集します。
+import文がわからない場合は完成版を参照してください。
 
 ```java
 @RestController
@@ -108,7 +108,7 @@ public class Controller {
 }
 ```
 
-���ä����ץ��ӥ�ɤ������`����ǼڃP�����Ƥߤޤ���
+作ったアプリをビルドし、ローカルで稼働させてみます。
 ```shell
 ./mvnw package -Dmaven.test.skip=true
 java -jar target/demo-0.0.1-SNAPSHOT.jar
@@ -118,7 +118,7 @@ java -jar target/demo-0.0.1-SNAPSHOT.jar
 curl localhost:8080/ | jq
 ```
 
-���¤Τ褦�ʥ쥹�ݥ󥹤����ä�����гɹ��Ǥ���
+以下のようなレスポンスが返って来れば成功です。
 ```json
 {
   "message": "Helloworld V1",
@@ -127,63 +127,63 @@ curl localhost:8080/ | jq
 }
 ```
 
-## PCF�˥��ץꥱ�`������push����
-�Τ�`cf push`��ʹ�äƥ��ץꥱ�`������PCF�Ϥ˥ǥץ������ޤ���`cf target`�ǥ������󤬳����Ƥ��뤳�Ȥ�_�J���Ƥ���������
+## PCFにアプリケーションをpushする
+次に`cf push`を使ってアプリケーションをPCF上にデプロイします。`cf target`でログインが出来ていることを確認してください。
 ```shell
 cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 ```
 
-`tkaburagi`�β��֤�������STUDENT_ID���ä��Q���Ƥ���������ͬ���쥹�ݥ󥹤����`�Ф��鷵�äƤ���Ǥ��礦��
+`tkaburagi`の部分は自身のSTUDENT_IDに置き換えてください。同じレスポンスがサーバから返ってくるでしょう。
 ```shell
 curl https://api-tkaburagi.apps.pcfone.io | jq
 ```
 
-���Ϥ�������ץꥱ�`�����Υǥץ����ϽK�ˤǤ���
+以上で最初アプリケーションのデプロイは終了です。
 
-**�����ޤ����ˤ������M�å��`�Ȥ˥����å��򤷤Ƥ���������**
+**ここまで完了したら進捗シートにチェックをしてください。**
 
 
 ## Exploring cf cli and Apps Manager
-�����ǤϤ����Ĥ��λ����Ĥ�cf cli��ʹ�äƥ��ץꥱ�`������������Ƥߤޤ���
+ここではいくつかの基本的なcf cliを使ってアプリケーションを操作してみます。
 
-### �����Ĥ�cf cli
-���ץꥱ�`�����򥹥��`�륢���Ȥ������Ȥ��ϡ�`cf scale`���ޥ�ɤ����ä��ޤ���
+### 基本的なcf cli
+アプリケーションをスケールアウトしたいときは、`cf scale`コマンドを利用します。
 ```shell
 cf scale -i 2
 curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
 ```
-`curl`���ޥ�ɤ�ζȤ�ߵ���Ƥ������������ץꥱ�`����󤬥����`�륢���Ȥ���`index`�ˌ�����ؓ�ɷ�ɢ���Ƥ��뤳�Ȥ��狼��ޤ����ޤ������󥹥��󥹤��ۥ��Ȥ���Ƥ���`host`�΂���index���Ȥˉ仯���Ƥ��뤳�Ȥ�_�J���Ƥߤޤ��礦��
+`curl`コマンドを何度か叩いてください。アプリケーションがスケールアウトし、`index`に対して負荷分散していることがわかります。また各インスタンスがホストされている`host`の値もindexごとに変化していることも確認してみましょう。
 
-�Τˡ�`cf logs` ��ʹ�äƥ��ץ�Υ�����ȡ�ä��ޤ���
+次に、`cf logs` を使ってアプリのログを取得します。
 ```shell
 cf logs api-tkaburagi --recent
 ```
-`--recent`���ץ�����Ĥ����Loggregator�˥Хåե�����Ƥ��롢����Υ��������פǤ��ޤ���
+`--recent`オプションをつけるとLoggregatorにバッファされている、最近のログをダンプできます。
 ```shell
 cf logs api-tkaburagi
 ```
-���ץ����ʤ����ȡ����������ȥ�`�ߥ󥰤���ޤ�������״�B�Ǆe���`�ߥʥ��`curl`���ޥ�ɤ�g�Ф����ץ�Υ���ɥݥ���Ȥ˥����������ƤߤƤ���������
+オプションなしだと、ログがストリーミングされます。この状態で別ターミナルで`curl`コマンドを実行しアプリのエンドポイントにアクセスしてみてください。
 
-log�����ȥ�`�ߥ󥰤���Ƥ��뤳�Ȥ��狼��ޤ���PCF�Ǥϥ��ץ���������ǤϤʤ������`�Х����䥢�����������ʤɤ򅧼����ޤ���
+logがストリーミングされていることがわかります。PCFではアプリログだけではなく、サーバログやアクセスログなどを収集します。
 
-�������ˤ�`cf apps`��`cf app api-tkaburagi`�ʤɤ�g�Ф�����Է֤Υƥʥ�ȤΥ��ץ�һ�E��1���ץ��Ԕ�������Ҋ��ޤ���
+その他にも`cf apps`や`cf app api-tkaburagi`などを実行すると自分のテナントのアプリ一覧や1アプリの詳細な情報が見れます。
 ```shell
 cf apps
 cf app api-tkaburagi
 ```
 
-`cf -h`��g�Ф���ȥإ�פ��ʾ�Ǥ��ޤ��Τǡ��r�g�Τ��뷽��ɫ���ʥ��ޥ�ɤ�ԇ���ƤߤƤ���������
+`cf -h`を実行するとヘルプを表示できますので、時間のある方は色々なコマンドを試してみてください。
 
-### �ޥ˥ե����Ȥ�ʹ�ä��ǥץ���
-���¤�g�Ф���һ�ȥ��ץ���������ޤ���
+### マニフェストを使ったデプロイ
+以下を実行し、一度アプリを削除します、
 ```shell
 cf delete api-tkaburagi
 cf apps
 ```
-`cf apps`��g�Ф���ȥ��ץ꤬��������Ƥ��뤳�Ȥ��狼��Ǥ��礦��
+`cf apps`を実行するとアプリが削除されていることがわかるでしょう。
 
-�Τˡ��ץ��������ȥǥ��쥯�ȥ�ֱ�¤�`manifest.yml`��׷�Ӥ������¤Τ褦�˾������ޤ���
-`- name:`��api-<STUDENT_ID>�ˤʤ�褦�����Q���Ƥ���������
+次に、プロジェクトディレクトリ直下に`manifest.yml`を追加して以下のように編集します。
+`- name:`をapi-<STUDENT_ID>になるよう書き換えてください。
 ```yaml
 applications:
 - name: api-tkaburagi
@@ -194,14 +194,14 @@ applications:
     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
 ```
 
-�Ȥۤɤ�`cf push`�Υ��ץ�����ʹ�äƥ��ץ��ǥץ������ޤ�������manifest��ʹ�äƥǥץ������ޤ��������Ǥϥ��ץꥱ�`����������ӥ�ɥѥå������ץ�Υѥ������ä���JRE�ΥЩ`�����ʤɤ�ָ�����Ƥ��ޤ���
+先ほどは`cf push`のオプションを使ってアプリをデプロイしましたが、manifestを使ってデプロイします。ここではアプリケーション名、ビルドパック、アプリのパスや利用するJREのバージョンなどを指定しています。
 
 ```shell
 cf push
 ```
-���Υޥ˥ե����Ȥ򥫥��ȥǥ��쥯�ȥ���ä�`cf push`����ȥǥ��쥯�ȥ�ֱ�¤�manifest���i���z�ߡ����ץ꤬�ǥץ�������ޤ����ޤ���`cf push -f path/tomanifest.yml`�Τ褦���Τǥޥ˥ե����Ȥ�ָ�����뤳�Ȥ�Ǥ��ޤ���
+このマニフェストをカレントディレクトリに置き`cf push`するとディレクトリ直下のmanifestを読み込み、アプリがデプロイされます。また、`cf push -f path/tomanifest.yml`のような形でマニフェストを指定することもできます。
 
-**�����ޤ����ˤ������M�å��`�Ȥ˥����å��򤷤Ƥ���������**
+**ここまで完了したら進捗シートにチェックをしてください。**
 
-### PCF Apps Manager������
-Web�֥饦����`https://apps.sys.pcf.pcflab.jp`�˥�����������cf cli��ͬ���˥������󤷤Ƥ���������������혤��v����һ�w�˥֥饦����������ޤ������äƤ��뷽�����ɤ�ʹ�ä�Ҋ�Ƥ���������
+### PCF Apps Managerの利用
+Webブラウザで`https://apps.sys.pcf.pcflab.jp`にアクセスし、cf cliと同様にログインしてください。この手順は講師と一緒にブラウザを操作します。待っている方は自由に使って見てください。
