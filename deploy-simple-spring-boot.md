@@ -94,7 +94,7 @@ import文がわからない場合は完成版を参照してください。
 @RestController
 public class Controller {
 
-	ObjectMapper mapper = new ObjectMapper();
+    ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping("/")
     public String helloWolrd() {

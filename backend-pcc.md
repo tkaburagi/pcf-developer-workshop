@@ -1,5 +1,7 @@
 # Using Pivotal Cloud Cache
-ここではMarkeplace上のPivotal Cloud Cacheを利用し、Spring BootのアプリケーションからPivotal Cloud Cacheを扱います。
+ここではMarkeplace上のPivotal Cloud Cacheを利用し、Spring BootのアプリケーションからPivotal Cloud Cacheを扱います。GemFireなどのインメモリデータグリッドにアクセスするには`Look Asideパターン`と`Inline Cache`パターンの二つがありますが、今回は`Look Aside`パターンで実装します。
+
+詳細は[こちら](https://content.pivotal.io/blog/an-introduction-to-look-aside-vs-inline-caching-patterns)を参考にしてください。
 
 ## PCCインスタンスを作成
 ```console 
@@ -268,7 +270,7 @@ Started: 2019-02-11T04:41:14Z
 Updated: 2019-02-11T04:41:14Z
 ```
 
-PCCの認証情報を持ったCredHubインスタンスが作成され、これをアプリケーションにbindする。
+PCCの認証情報を持ったCredHubインスタンスが作成され、これをアプリケーションにbindします。
 ```shell
 cf bind-service api-tkaburagi pcc-cred-api
 ```
