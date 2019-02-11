@@ -1,5 +1,5 @@
 # pcf-developer-workshop
-* (簡単なアプリをデプロイする)[https://github.com/tkaburagi/pcf-developer-workshop/blob/master/deploy-simple-spring-boot.md]
+* [簡単なアプリをデプロイする](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/deploy-simple-spring-boot.md)
 * バックエンドデータベース(MySQL)を利用する　済
 * キャッシュストア(Pivotal Cloud Cache)を利用する　済
 * Grafanaでモニタリングする　済
