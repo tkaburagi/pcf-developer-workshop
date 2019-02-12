@@ -55,15 +55,8 @@ curl -X POST https://api-tkaburagi.apps.pcf.pcflab.jp/shutdown --insecure
 ## PCF Auto-scalerの利用
 PCFのライセンスに付随するApp Autoscalerを利用するとアプリケーションのパフォーマンスやカレンダーに基づいてアプリケーションの自動スケールアウト、スケールインを実現できます。
 
-Apps Manager: https://apps.sys.pcf.pcflab.jp
-Apps Managerにログインし、左カラムの`Marketplace`を選択し、`App Autoscaler`を選択してください。
 
-次に`Standard Plan`を選択し、下記を入力します。
-* Instance Name: my-autoscaler-<STUDENT_ID>
-* Add to Space: development
-* Bind to App: api-tkaburagi
-
-インスタンスが出来たら作成したら`api-tkaburagi`の画面に移動し、Autoscalingをオンにします。
+Apps Managerを開き、`api-tkaburagi`の画面に移動し、Autoscalingをオンにします。
 ![image](https://storage.googleapis.com/pcf-workshop/autoscale.png)
 
 `Manage Autoscaling`を押し、Autoscalerの設定を実施します。
@@ -74,9 +67,10 @@ Apps Managerにログインし、左カラムの`Marketplace`を選択し、`App
 
 2. CPUの閾値の設定
 
+`SCALING RULES`の`EDIT`を選択し`ADD RULE`で`CPU Utilization`を選びます。
 ![image](https://storage.googleapis.com/pcf-workshop/autoscale3.png)
 
-設定が完了したら`ENABLE`になっていることを確認します。
+設定が完了したら`SAVE`を押します。
 
 ![image](https://storage.googleapis.com/pcf-workshop/autoscale4.png)
 
@@ -85,11 +79,9 @@ Apps Managerにログインし、左カラムの`Marketplace`を選択し、`App
 ```console
 cf app api-tkaburagi | grep "%"
 #0   running   2018-04-24T07:07:36Z   0.3%   297.1M of 1G   138.1M of 1G
-#1   running   2018-04-26T06:49:18Z   0.0%   240.8M of 1G   138.1M of 1G
-#2   running   2018-04-26T06:49:18Z   0.0%   40K of 1G      8K of 1G
 ```
 
-数秒に一度実行すると徐々にスケールインする様子がわかります。
+数秒に一度実行するとスケールインする様子がわかります。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 

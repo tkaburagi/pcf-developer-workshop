@@ -89,7 +89,7 @@ import文がわからない場合は完成版を参照してください。
 
 ```java
 @RestController
-public class Controller {
+public class ApiController {
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -99,6 +99,7 @@ public class Controller {
         jsonObject.put("message","Helloworld V1");
         jsonObject.put("index", System.getenv("CF_INSTANCE_INDEX"));
         jsonObject.put("host", System.getenv("CF_INSTANCE_IP"));
+        jsonObject.put("java", System.getProperty("java.vm.version"));
         return jsonObject.toString();
     }
 
@@ -120,7 +121,8 @@ curl localhost:8080/ | jq
 {
   "message": "Helloworld V1",
   "index": "0",
-  "host": "192.168.16.42"
+  "host": "10.0.5.5",
+  "java": "11.0.2+9"
 }
 ```
 
@@ -135,7 +137,7 @@ cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 curl https://api-tkaburagi.apps.pcfone.io | jq
 ```
 
-以上で最初のアプリケーションのデプロイは終了です。`cf`コマンドでコンテナのビルド、保存やアプリケーションの外部公開や運用監視の設定などの作業を完結し、　**Source to URL**を実現しています。
+以上で最初のアプリケーションのデプロイは終了です。`cf`コマンドでコンテナのビルド、保存やアプリケーションの外部公開や運用監視の設定などの作業を完結し、**Source to URL**を実現しています。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
@@ -146,7 +148,7 @@ curl https://api-tkaburagi.apps.pcfone.io | jq
 ### 基本的なcf cli
 アプリケーションをスケールアウトしたいときは、`cf scale`コマンドを利用します。
 ```shell
-cf scale -i 
+cf scale -i 2
 ```
 ```console
 $ cf app api-tkaburagi
@@ -172,7 +174,8 @@ $ curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
 {
   "message": "Helloworld V1",
   "index": "0",
-  "host": "192.168.16.31"
+  "host": "10.0.5.5",
+  "java": "11.0.2+9"
 }
 ```
 
@@ -181,7 +184,8 @@ $ curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
 {
   "message": "Helloworld V1",
   "index": "1",
-  "host": "192.168.16.33"
+  "host": "10.0.5.5",
+  "java": "11.0.2+9"
 }
 ```
 

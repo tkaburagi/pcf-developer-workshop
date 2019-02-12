@@ -82,7 +82,7 @@ public class UiController {
 ```
 
 Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。エラーが返ってくるはずです。APIアプリからエラーが返り、それがUIのアプリに伝搬し、そのか全ての機能に影響を与えていることがわかると思います。
-//TODO
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/cb-1.png)
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
@@ -122,7 +122,7 @@ public class DemoUiApplication{
 Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。
 
 例外が発生しているメソッドの処理は`fallbackMethod`が実行され、`No available`というメッセージが表示され、そのほかの機能は正常に動作していることがわかります。
-//TODO
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/cb-2.png)
 
 Circuit Breakerにはこの他にも様々な設定を行うことがきます。
 

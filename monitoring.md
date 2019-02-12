@@ -33,8 +33,6 @@ To https://github.com/tkaburagi/pcf-developer-workshop.git
    c495911..eb8bbdb  master -> master
 ➜  pcf-developer-workshop git:(master) curl https://api-tkaburagi.apps.pcfone.io/actuator/prometheus
 
-# HELP logback_events_total Number of error level events that made it to the logs
-# TYPE logback_events_total counter
 logback_events_total{level="warn",} 6.0
 logback_events_total{level="debug",} 0.0
 logback_events_total{level="error",} 0.0
@@ -46,10 +44,19 @@ logback_events_total{level="info",} 19.0
 ## Prometheusにログインする
 今回はPrometheus側はすでに設定済みのためすでにメトリクスの収集が始まっています。参考までに、このような設定を行っています。
 ```yaml
-//TODO
+value:
+  job_name: api-tkaburagi
+  metrics_path: /actuator/prometheus
+  scheme: http
+  scrape_interval: 20s
+  scrape_timeout: 5s
+  static_configs:
+  - labels:
+      cf_app_name: api-tkaburagi
+    targets:
+    - api-tkaburagi.apps.pcf.pcflab.jp
 ```
 `https://prometheus.sys.pas.ik.am`をブラウザで開きます。
-//TODO
 
 
 # Micrometer とPCF Metricsを使ってメトリクスを監視する

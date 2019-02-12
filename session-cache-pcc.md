@@ -4,6 +4,7 @@
 ## PCCインスタンスのアップデート
 ```shell
 cf update-service pcc -t session-replication
+cf bind-service ui-tkaburagi pcc
 ```
 RedisもしくはPCCのインスタンスで`tag`に`session-replication`を持つインスタンスもしくはインスタンス名に`session-replication`が入っているインスタンスをbindするとHTTP SessionがRedisもしくはPCCに格納されます。上記のコマンドは前に作ったPCCのインスタんしに`session-replication`のタグを付与しています。
 
@@ -123,7 +124,10 @@ Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセス�
 セッション情報が表示されているでしょう。次にPulseからGemFireのインスタンスの中身を確認してみます。WebブラウザでPulseにアクセスし、`Data Browser`を開いてください。`QUERY EDITOR`に以下のクエリーを入力し、出力結果を確認します。
 
 `select * from /ClusteredSpringSessions` 
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/session-1.png)
+
 
 データが格納されていることを確認します。`last access time`の値をメモし、再度ブラウザからアプリにアクセスしてみましょう。`last access time`の値が更新され、GemFireからセッションデータが取得されていることがわかります。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/session-2.png)
 
 **ここまで完了したら進捗シートにチェックをしてください。**

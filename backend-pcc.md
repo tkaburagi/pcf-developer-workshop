@@ -180,10 +180,7 @@ public class Controller {
 }
 ```
 
-**ここまで完了したら進捗シートにチェックをしてください。**
-
-## CredHubの利用
-まず先ほどのインスタンスが作成完了しているかを確認します。
+次に、PCCインスタンスをアプリケーションにbindしていきます。まず先ほどのインスタンスが作成完了しているかを確認します。
 ```console
 $ cf service pcc                               
 
@@ -203,8 +200,15 @@ Started: 2019-02-09T07:04:10Z
 Updated: 2019-02-09T07:09:26Z
 ```
 
-`Status`が`create succeeeded`になっていることを確認します。`provisioning`になっていたら完了するまで待ってください。
-先ほどは`bind-service`で直接アプリケーションの環境変数にセットしましたが、設定内容がターミナル上で表示されてしまいます。そこでCredHub Service Brokerを利用し、セキュアに設定情報をセットします。まずは`cf create-service-key`でサービスキーを作成します。
+`Status`が`create succeeeded`になっていることを確認します。`provisioning`になっていたら完了するまで待ってください。完了したら`cf bind-service`でbindします。
+```shell
+cf bind-service api-tkaburagi pcc
+```
+
+**ここまで完了したら進捗シートにチェックをしてください。**
+
+## CredHubの利用
+CredHub Service Brokerを利用し、セキュアに設定情報をセットします。まずは`cf create-service-key`でサービスキーを作成します。
 
 ```console
 $ cf create-service-key pcc pcc-svc-key
@@ -247,7 +251,7 @@ Getting key pcc-svc-key for service instance pcc as tkaburagi@pivotal.io...
 }
 ```
 
-ユーザ名の`cluster_operator_L9szKr9Ss777W4eak158w`とパスワードの`jsZX6TJjhkwewK848hhLA`の部分をコピペしてメモ帳に残してください。Credhubのサービスインスタンスを作成します。
+ユーザ名の`cluster_operator_L9szKr9Ss777W4eak158w`とパスワードの`jsZX6TJjhkwewK848hhLA`とLocatorsの`192.168.12.34[55221]`の部分をコピペしてメモ帳に残してください。Credhubのサービスインスタンスを作成します。
 ```shell
 cf create-service credhub default pcc-cred  -c '{"pccusername":"cluster_operator_L9szKr9Ss777W4eak158w", "pccpassword":"jsZX6TJjhkwewK848hhLA"}'
 ```
@@ -304,10 +308,9 @@ System-Provided:
   //以下省略
 ```
 
-CredHubへの参照のみが表示され、認証情報は表示されていないことがわかります。
-
 アプリケーションの`application.properties`を次のように編集します。
 ```properties
+spring.data.gemfire.pool.DEFAULT.locators=10.0.8.4[55221]
 spring.data.gemfire.security.username=${vcap.services.pcc-cred.credentials.pccusername}
 spring.data.gemfire.security.password=${vcap.services.pcc-cred.credentials.pccpassword}
 ```
@@ -413,7 +416,7 @@ cf restart
 ```
 キャッシュからデータが取得されていることを確認します。再起動してもデータは残っており、外部のメモリデータストアからデータを取得されていることがわかります。
 ```console
-$ curl api-tkaburagi.apps.pcf.pcflab.jp//book?id=1 | jq 
+$ curl api-tkaburagi.apps.pcf.pcflab.jp/book?id=1 | jq 
 {
   "id": "1",
   "title": "What's Pivotal",

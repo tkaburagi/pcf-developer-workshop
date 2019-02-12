@@ -141,6 +141,7 @@ applications:
 
 次に`application.properties`を下記のように編集します。
 ```properties
+api.url.info=http://api-tkaburagi.apps.internal:8080
 api.url.allbooks=http://api-tkaburagi.apps.internal:8080/allbooks
 api.url.book=http://api-tkaburagi.apps.internal:8080/book
 ```
@@ -201,6 +202,56 @@ public class Book implements Serializable {
 }
 ```
 
+`com.example.demo`の直下に`AppInfo.java`を追加し、下記のように編集します。
+```java
+package com.example.demo;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.io.Serializable;
+
+@JsonSerialize
+public class AppInfo implements Serializable {
+    private String message;
+    private String index;
+    private String host;
+    private String java;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getJava() {
+        return java;
+    }
+
+    public void setJava(String java) {
+        this.java = java;
+    }
+}
+
+```
+
 `com.example.demo`の直下に`UiService.java`を追加し、下記のように編集します。
 ```java
 package com.example.demo;
@@ -216,6 +267,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class UiService {
 
+    @Value( "${api.url.info}" )
+    private String apiUrl;
+
     @Value( "${api.url.allbooks}" )
     private String apiUrl1;
 
@@ -225,6 +279,13 @@ public class UiService {
     ObjectMapper mapper = new ObjectMapper();
 
     RestTemplate restTemplate = new RestTemplate();
+
+    public Model getAppInfo(Model model) throws Exception {
+        String result = restTemplate.getForObject(apiUrl, String.class);
+        AppInfo a = mapper.readValue(result, AppInfo.class);
+        model.addAttribute("appinfo", a);
+        return  model;
+    }
 
     public Model getAllBooks(Model model) throws Exception {
         String result = restTemplate.getForObject(apiUrl1, String.class);
@@ -265,7 +326,7 @@ public class UiController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String home(String id, Model model) throws Exception {
-
+        uiService.getAppInfo(model);
         uiService.getAllBooks(model);
         uiService.getBookById(id, model);
         return "ui/index";
@@ -284,6 +345,24 @@ public class UiController {
           href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css" />
 </head>
 <body>
+<table class="pure-table pure-table-striped table logo">
+    <thead>
+    <tr>
+        <th>Message</th>
+        <th>Index</th>
+        <th>Host</th>
+        <th>Java Version</th>
+    </tr>
+    </thead>
+    <th:block th:each="appinfo : ${appinfo}">
+        <tr>
+            <td width="30%" th:text="${appinfo.message}" />
+            <td width="30%" th:text="${appinfo.index}" />
+            <td width="30%" th:text="${appinfo.host}" />
+            <td width="30%" th:text="${appinfo.java}" />
+        </tr>
+    </th:block>
+</table>
 <table class="pure-table pure-table-striped table logo">
     <thead>
     <tr>
@@ -345,8 +424,8 @@ cf add-network-policy ui-tkaburagi --destination-app api-tkaburagi  --protocol t
 ```
 
 再度`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。
-以下のような我慢が表示されるはずです。
-//TODO
+以下のような画面表示されるはずです。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/ui-1.png)
 
 これでUI - API間の疎通ができました。
 

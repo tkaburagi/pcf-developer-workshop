@@ -3,7 +3,7 @@
 
 ## MySQLインスタンスを作成
 
-`cf marketplace`コマンドで
+`cf marketplace`コマンドで使えるサービス一覧が確認できます。
 ```console 
 $ cf marketplace
 Getting services from marketplace in org pivot-tkaburagi / space playground as tkaburagi@pivotal.io...
@@ -28,7 +28,7 @@ postgresql-10-odb             standalone, general                               
 
 `cf create-service`コマンドでサービスインスタンスを作成します。`cf create-service <Service Nama> <Plan Nanme> <Service Instance Name`でSevice Brokerを使ってサービスインスタンスをプロビジョニングできます。
 ```shell
-cf create-service p.mysql small mysql
+cf create-service p.mysql db-small mysql
 ```
 作成にはしばらく時間がかかりますので、待っている間次に進んでください。
 
