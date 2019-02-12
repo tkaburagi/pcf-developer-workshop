@@ -141,7 +141,7 @@ applications:
 
 次に`application.properties`を下記のように編集します。
 ```properties
-api.url.info=http://api-tkaburagi.apps.internal:8080
+api.url=http://api-tkaburagi.apps.internal:8080
 api.url.allbooks=http://api-tkaburagi.apps.internal:8080/allbooks
 api.url.book=http://api-tkaburagi.apps.internal:8080/book
 ```
@@ -267,7 +267,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class UiService {
 
-    @Value( "${api.url.info}" )
+    @Value( "${api.url}" )
     private String apiUrl;
 
     @Value( "${api.url.allbooks}" )
