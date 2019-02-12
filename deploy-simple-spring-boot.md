@@ -138,7 +138,7 @@ cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 curl https://api-tkaburagi.apps.pcfone.io | jq
 ```
 
-以上で最初アプリケーションのデプロイは終了です。
+以上で最初のアプリケーションのデプロイは終了です。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
@@ -175,7 +175,7 @@ cf app api-tkaburagi
 `cf -h`を実行するとヘルプを表示できますので、時間のある方は色々なコマンドを試してみてください。
 
 ### マニフェストを使ったデプロイ
-以下を実行し、一度アプリを削除します、
+以下を実行し、一度アプリを削除します。
 ```shell
 cf delete api-tkaburagi
 cf apps
@@ -194,7 +194,7 @@ applications:
     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
 ```
 
-先ほどは`cf push`のオプションを使ってアプリをデプロイしましたが、manifestを使ってデプロイします。ここではアプリケーション名、ビルドパック、アプリのパスや利用するJREのバージョンなどを指定しています。
+先ほどは`cf push`のオプションを使ってアプリをデプロイしましたが、manifestを使ってデプロイします。ここではアプリケーション名、ビルドパック、アプリのパスや利用するJREのバージョンなどを指定しています。ドキュメントは[こちら](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html)です
 
 ```shell
 cf push

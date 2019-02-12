@@ -249,12 +249,12 @@ Getting key pcc-svc-key for service instance pcc as tkaburagi@pivotal.io...
 
 ユーザ名の`cluster_operator_L9szKr9Ss777W4eak158w`とパスワードの`jsZX6TJjhkwewK848hhLA`の部分をコピペしてメモ帳に残してください。Credhubのサービスインスタンスを作成します。
 ```shell
-cf create-service credhub default pcc-cred-api  -c '{"pccusername":"cluster_operator_L9szKr9Ss777W4eak158w", "pccpassword":"jsZX6TJjhkwewK848hhLA"}'
+cf create-service credhub default pcc-cred  -c '{"pccusername":"cluster_operator_L9szKr9Ss777W4eak158w", "pccpassword":"jsZX6TJjhkwewK848hhLA"}'
 ```
 
 ```console
-$ cf service pcc-cred-api
-Service instance: pcc-cred-api
+$ cf service pcc-cred
+Service instance: pcc-cred
 Service: credhub
 Bound apps:
 Tags:
@@ -272,7 +272,7 @@ Updated: 2019-02-11T04:41:14Z
 
 PCCの認証情報を持ったCredHubインスタンスが作成され、これをアプリケーションにbindします。
 ```shell
-cf bind-service api-tkaburagi pcc-cred-api
+cf bind-service api-tkaburagi pcc-cred
 ```
 
 ```console
@@ -289,9 +289,9 @@ System-Provided:
     "credentials": {
      "credhub-ref": "/credhub-service-broker/credhub/f95602af-33fd-422a-815e-fec3dc975ec8/credentials"
     },
-    "instance_name": "pcc-cred-api",
+    "instance_name": "pcc-cred",
     "label": "credhub",
-    "name": "pcc-cred-api",
+    "name": "pcc-cred",
     "plan": "default",
     "provider": null,
     "syslog_drain_url": null,
@@ -308,8 +308,8 @@ CredHubへの参照のみが表示され、認証情報は表示されていな�
 
 アプリケーションの`application.properties`を次のように編集します。
 ```properties
-spring.data.gemfire.security.username=${vcap.services.pcc-cred-api.credentials.pccusername}
-spring.data.gemfire.security.password=${vcap.services.pcc-cred-api.credentials.pccpassword}
+spring.data.gemfire.security.username=${vcap.services.pcc-cred.credentials.pccusername}
+spring.data.gemfire.security.password=${vcap.services.pcc-cred.credentials.pccpassword}
 ```
 
 アプリケーションからは直接CredHubを参照する必要はなく、CredHubの参照キーを環境変数から取得し、設定ファイルから取得します。

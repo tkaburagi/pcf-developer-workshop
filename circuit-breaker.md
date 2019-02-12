@@ -15,7 +15,7 @@
 
 次に`application.properties`を下記のように編集します。
 ```properties
-api.url.dummy=http://api-tkaburagi.apps.pcf.pcflab.jp/dummy
+api.url.dummy=http://api-tkaburagi.apps.internal:8080/dummy
 ```
 
 `UiService.java`のクラス内に以下の変数とメソッドを追加します。
@@ -24,7 +24,8 @@ api.url.dummy=http://api-tkaburagi.apps.pcf.pcflab.jp/dummy
  private String dummyUrl;
  
  public Model dummy(Model model) {
-        restTemplate.getForObject(dummyUrl, String.class);
+        String message = restTemplate.getForObject(dummyUrl, String.class);
+        model.addAttribute("message", message);
         return model;
     }
 ```
@@ -41,7 +42,7 @@ public class UiController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
-    public String home(String id, Model model, HttpSession session) throws Exception {
+    public String home(String id, Model model) throws Exception {
 
         uiService.getAllBooks(model);
         uiService.getBookById(id, model);
@@ -83,12 +84,15 @@ public class UiController {
 Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。エラーが返ってくるはずです。APIアプリからエラーが返り、それがUIのアプリに伝搬し、そのか全ての機能に影響を与えていることがわかると思います。
 //TODO
 
+**ここまで完了したら進捗シートにチェックをしてください。**
+
 ## Circuit Breakerの導入
 `UiService.java`の先ほどの`dummyメソッド`を以下のように変更します。
 ```java
  @HystrixCommand(fallbackMethod = "executeFallback")
  public Model dummy(Model model) {
-     restTemplate.getForObject(dummyUrl, String.class);
+     String message = restTemplate.getForObject(dummyUrl, String.class);
+     model.addAttribute("message", message);
      return model;
  }
 
@@ -124,3 +128,5 @@ Circuit Breakerにはこの他にも様々な設定を行うことがきます�
 
 [https://github.com/Netflix/Hystrix/wiki/Configuration](https://github.com/Netflix/Hystrix/wiki/Configuration
 )
+
+**ここまで完了したら進捗シートにチェックをしてください。**

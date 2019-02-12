@@ -253,8 +253,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpSession;
-
 @Component
 @Controller
 @Service
@@ -265,7 +263,7 @@ public class UiController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
-    public String home(String id, Model model, HttpSession session) throws Exception {
+    public String home(String id, Model model) throws Exception {
 
         uiService.getAllBooks(model);
         uiService.getBookById(id, model);
