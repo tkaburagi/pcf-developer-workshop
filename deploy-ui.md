@@ -143,8 +143,6 @@ applications:
 次に`application.properties`を下記のように編集します。
 ```properties
 api.url=http://api-tkaburagi.apps.internal:8080
-api.url.allbooks=http://api-tkaburagi.apps.internal:8080/allbooks
-api.url.book=http://api-tkaburagi.apps.internal:8080/book
 ```
 
 `com.example.demo`の直下に`Book.java`を追加し、下記のように編集します。
@@ -271,12 +269,6 @@ public class UiService {
     @Value( "${api.url}" )
     private String apiUrl;
 
-    @Value( "${api.url.allbooks}" )
-    private String apiUrl1;
-
-    @Value( "${api.url.book}" )
-    private String apiUrl2;
-
     ObjectMapper mapper = new ObjectMapper();
 
     RestTemplate restTemplate = new RestTemplate();
@@ -289,14 +281,14 @@ public class UiService {
     }
 
     public Model getAllBooks(Model model) throws Exception {
-        String result = restTemplate.getForObject(apiUrl1, String.class);
+        String result = restTemplate.getForObject(apiUrl + "/allbooks", String.class);
         Book[] bList = mapper.readValue(result, Book[].class);
         model.addAttribute("allbooks", bList);
         return  model;
     }
 
     public Model getBookById(@RequestParam("id") String id, Model model) throws Exception {
-        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl2).queryParam("id", id).build().toString();
+        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl + "/book").queryParam("id", id).build().toString();
         String result = restTemplate.getForObject(targetUrl, String.class);
         System.out.println("targetUrl: " + targetUrl);
         Book b = mapper.readValue(result, Book.class);
