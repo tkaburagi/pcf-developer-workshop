@@ -16,7 +16,7 @@ applications:
     - pcc
     - mysql
 ```
-PCFでは`apps.internal`というコンテナ間で通信するための内部向けのドメインが付与されています。このドメインは外部からのリクエストは受け付けません。上のマニフェストでは`api-tkaburagi.apps.internal`というルート情報をマップしています。この内部ドメインは[BOSH DNS](https://bosh.io/docs/dns/)により[Service Discovery](https://www.cloudfoundry.org/blog/polyglot-service-discovery-container-networking-cloud-foundry/)されています。
+PCFでは`apps.internal`というコンテナ間で通信するための内部向けのドメインが付与されています。このドメインは外部からのリクエストは受け付けません。上のマニフェストでは`api-tkaburagi.apps.internal`というルート情報をマップしています。この内部ドメインは[BOSH DNS](https://bosh.io/docs/dns/)により[Service Discovery](https://www.cloudfoundry.org/blog/polyglot-service-discovery-container-networking-cloud-foundry/)されています。外からはアクセスできません。`cf push`します。
 
 ```console
 $ cf push
@@ -24,7 +24,7 @@ $ cf push
 curl: (6) Could not resolve host: api-tkaburagi.apps.internal
 ```
 
-エラーが返るはずです。これからデプロイするUIのアプリケーションからはこの内部ドメインを使ってAPIに対してリクエストします。
+リクエストすると、エラーが返るはずです。これからデプロイするUIのアプリケーションからはこの内部ドメインを使ってAPIに対してリクエストします。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
