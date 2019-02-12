@@ -223,7 +223,7 @@ cf apps
 ```yaml
 applications:
 - name: api-tkaburagi
-  buildpack: https://github.com/cloudfoundry/java-buildpack.git#v4.16
+  buildpack: java_buildpack_offline
   path: target/demo-0.0.1-SNAPSHOT.jar
   memory: 1g
   env:
