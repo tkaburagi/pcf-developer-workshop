@@ -1,15 +1,12 @@
 # Deploying Simple Spring Boot
 
 ## プロジェクトの作成
-アプリケーションを`git clone`します。
-任意のディレクトリで以下のコマンドを実行してください。
+[Spring Initializr](https://start.spring.io/)にアクセスして以下のようにSpring Bootプロジェクトを作成します。
+* Group: そのまま
+* Artifact: apidemo
+* Dependencies: web, Actuator
 
-```console
-$ mkdir pcf-workshop
-$ cd pcf-workshop
-$ git clone https://github.com/tkaburagi/hello-cf
-$ cd hello-cf
-```
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-1.png)
 
 `pom.xml`を次のように編集します。
 ```xml
@@ -138,7 +135,7 @@ cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 curl https://api-tkaburagi.apps.pcfone.io | jq
 ```
 
-以上で最初のアプリケーションのデプロイは終了です。
+以上で最初のアプリケーションのデプロイは終了です。`cf`コマンドでコンテナのビルド、保存やアプリケーションの外部公開や運用監視の設定などの作業を完結し、　**Source to URL**を実現しています。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
@@ -149,10 +146,45 @@ curl https://api-tkaburagi.apps.pcfone.io | jq
 ### 基本的なcf cli
 アプリケーションをスケールアウトしたいときは、`cf scale`コマンドを利用します。
 ```shell
-cf scale -i 2
-curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
+cf scale -i 
 ```
+```console
+$ cf app api-tkaburagi
+
+name:                api-tkaburagi
+requested state:     started
+instances:           2/2
+isolation segment:   iso-01
+usage:               1G x 2 instances
+routes:              api-tkaburagi.apps.pcfone.io, api-tkaburagi.apps.internal
+last uploaded:       Sat 09 Feb 16:24:32 JST 2019
+stack:               cflinuxfs3
+buildpack:           https://github.com/cloudfoundry/java-buildpack.git#v4.16
+
+     state     since                  cpu    memory         disk           details
+#0   running   2019-02-12T01:15:09Z   0.0%   276.4M of 1G   220.7M of 1G
+#1   running   2019-02-12T04:31:25Z   3.9%   274.9M of 1G   220.7M of 1G
+```
+
 `curl`コマンドを何度か叩いてください。アプリケーションがスケールアウトし、`index`に対して負荷分散していることがわかります。また各インスタンスがホストされている`host`の値もindexごとに変化していることも確認してみましょう。
+```console
+$ curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
+{
+  "message": "Helloworld V1",
+  "index": "0",
+  "host": "192.168.16.31"
+}
+```
+
+```console
+$ curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
+{
+  "message": "Helloworld V1",
+  "index": "1",
+  "host": "192.168.16.33"
+}
+```
+
 
 次に、`cf logs` を使ってアプリのログを取得します。
 ```shell
@@ -204,4 +236,12 @@ cf push
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 ### PCF Apps Managerの利用
-Webブラウザで`https://apps.sys.pcf.pcflab.jp`にアクセスし、cf cliと同様にログインしてください。この手順は講師と一緒にブラウザを操作します。待っている方は自由に使って見てください。
+Webブラウザで`https://apps.sys.pcf.pcflab.jp`にアクセスし、cf cliと同様にログインしてください。
+
+PCF Apps Managerで以下の作業を行ってみましょう。
+* Organization, Spaceのリソース量の確認
+* アプリケーションの停止、起動
+* アプリケーションの再起動
+* アプリケーションのログの確認
+* ルート情報の確認
+* アプリケーションの設定の確認

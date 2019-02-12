@@ -28,12 +28,13 @@ curl api-tkaburagi.apps.internal
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 ## UIアプリの開発
-```console
-$ mkdir pcf-workshop
-$ cd pcf-workshop
-$ git clone https://github.com/tkaburagi/hello-cf
-$ cd hello-cf
-```
+[Spring Initializr](https://start.spring.io/)にアクセスして以下のようにSpring Bootプロジェクトを作成します。
+* Group: そのまま
+* Artifact: uidemo
+* Dependencies: web, Actuator
+
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-2.png)
+
 
 manifest.ymlを追加します。`name`の`tkaburagi`の部分は自分のIDに合わせて書き換えてください。
 ```yaml

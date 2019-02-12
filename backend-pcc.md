@@ -368,10 +368,10 @@ gfsh> list regions
 ```
 
 次にWebクライアントのPulseでGUI上で見てみます。Webブラウザを開いてサービスキーから取得できる`url.pulse`にアクセスしてください。ユーザ名とパスワードは同じです。ログインすると以下の画面が見えます。
-![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/pulse-1.png)
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/pulse-1.png)
 
 `Data Browser`をクリックします。
-![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/pulse-2.png)
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/pulse-2.png)
 
 `QUERY EDITOR`に以下のクエリーを入力し、出力結果を確認します。
 
@@ -394,7 +394,7 @@ $ curl api-tkaburagi.apps.pcf.pcflab.jp/book?id=1 | jq
 ```
 
 初回のアクセスのため、CacheMissが発生し、MySQLにデータを取りに行くことがわかります。次にPulseに戻り再度同じクエリーを実行してみましょう。
-![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/pulse-3.png)
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/pulse-3.png)
 
 PCCにデータがキャッシュされていることがわかるはずです。再度アプリケーションにアクセスしてみます。
 ```console
