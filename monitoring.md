@@ -56,6 +56,8 @@ value:
     targets:
     - api-tkaburagi.apps.pcf.pcflab.jp
 ```
+
+今回は事前に全員分の設定をしていますが、[promregator](https://github.com/promregator/promregator)を利用すると個別で設定する必要がなくなります。
 `https://prometheus.sys.pas.ik.am`をブラウザで開きます。
 
 
