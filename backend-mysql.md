@@ -176,10 +176,8 @@ public class Controller {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/allbook")
-    public String getAllBook() throws Exception{
-
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(bookJpaRepository.findAll());
+    public Object getAllBook() throws Exception{
+      return bookJpaRepository.findAll();
     }
 }
 ```
