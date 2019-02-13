@@ -6,11 +6,38 @@
 
 `pom.xml`に以下の依存ライブラリ情報を追加してください。
 ```xml
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-    <version>2.1.0.RELEASE</version>
-</dependency>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         <!--  省略 -->
+    <properties>
+                <!--  省略 -->
+        <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+                <!--  省略 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+                <!--  省略 -->
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--  省略 -->
+</project>
 ```
 
 次に`application.properties`を下記のように編集します。
