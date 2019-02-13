@@ -278,27 +278,23 @@ public class UiService {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    public Model getAppInfo(Model model) throws Exception {
+    public AppInfo getAppInfo() throws Exception {
         String result = restTemplate.getForObject(apiUrl, String.class);
         AppInfo a = mapper.readValue(result, AppInfo.class);
-        model.addAttribute("appinfo", a);
-        return  model;
+        return  a;
     }
 
-    public Model getAllBooks(Model model) throws Exception {
-        String result = restTemplate.getForObject(apiUrl + "/allbooks", String.class);
+    public Book[] getAllBooks() throws Exception {
+        String result = restTemplate.getForObject(apiUrl1, String.class);
         Book[] bList = mapper.readValue(result, Book[].class);
-        model.addAttribute("allbooks", bList);
-        return  model;
+        return  bList;
     }
 
-    public Model getBookById(@RequestParam("id") String id, Model model) throws Exception {
-        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl + "/book").queryParam("id", id).build().toString();
+    public Book getBookById(@RequestParam("id") String id) throws Exception {
+        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl2).queryParam("id", id).build().toString();
         String result = restTemplate.getForObject(targetUrl, String.class);
-        System.out.println("targetUrl: " + targetUrl);
         Book b = mapper.readValue(result, Book.class);
-        model.addAttribute("searchedBook", b);
-        return  model;
+        return b;
     }
 }
 ```
@@ -324,9 +320,10 @@ public class UiController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String home(String id, Model model) throws Exception {
-        uiService.getAppInfo(model);
-        uiService.getAllBooks(model);
-        uiService.getBookById(id, model);
+        log.info("Handling home");
+        model.addAttribute("appinfo", uiService.getAppInfo());
+        model.addAttribute("allbooks", uiService.getAllBooks());
+        model.addAttribute("searchedBook", uiService.getBookById(id));
         return "ui/index";
     }
 }

@@ -70,11 +70,13 @@ public class PccConfig {
 ```java     
 @RequestMapping(method = RequestMethod.GET, value = "/")
 public String home(String id, Model model, HttpSession session) throws Exception {
-    uiService.getAllBooks(model);
-    uiService.getBookById(id, model);
-    uiService.dummy(model);
-    session.setAttribute("iam", "I'm a Session");
-    return "ui/index";
+        log.info("Handling home");
+        model.addAttribute("appinfo", uiService.getAppInfo());
+        model.addAttribute("allbooks", uiService.getAllBooks());
+        model.addAttribute("searchedBook", uiService.getBookById(id));
+        model.addAttribute("message", uiService.dummy());
+        session.setAttribute("iam", "I'm a Session");
+        return "ui/index";
 }
 ```
 

@@ -71,9 +71,12 @@ public class UiController {
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String home(String id, Model model) throws Exception {
 
-        uiService.getAllBooks(model);
-        uiService.getBookById(id, model);
-        uiService.dummy(model);
+        log.info("Handling home");
+        model.addAttribute("appinfo", uiService.getAppInfo());
+        model.addAttribute("allbooks", uiService.getAllBooks());
+        model.addAttribute("searchedBook", uiService.getBookById(id));
+        model.addAttribute("message", uiService.dummy());
+        session.setAttribute("iam", "I'm a Session");
         return "ui/index";
     }
 }
@@ -116,16 +119,14 @@ Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセス�
 ## Circuit Breakerの導入
 `UiService.java`の先ほどの`dummyメソッド`を以下のように変更します。
 ```java
- @HystrixCommand(fallbackMethod = "executeFallback")
- public Model dummy(Model model) {
-     String message = restTemplate.getForObject(dummyUrl, String.class);
-     model.addAttribute("message", message);
-     return model;
- }
+    @HystrixCommand(fallbackMethod = "executeFallback")
+    public String dummy() {
+        return restTemplate.getForObject(dummyUrl, String.class);
+    }
 
- public Model executeFallback(Model model, Throwable e) {
-     return model.addAttribute("message", "No available");
-  }
+    public String executeFallback(Throwable e) {
+        return "Not available";
+    }
 ```
 
 `@HystrixCommand`を`dummyメソッド`に付与し、`fallbackMethod`(このメソッドで例外が発生したときに呼ばれるメソッド)を`executeFallback`として定義しています。最後に`DemoUiApplication.java`を以下のように変更します。
