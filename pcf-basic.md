@@ -36,7 +36,7 @@ cf restart api-tkaburagi
 
 アプリが再起動し、0-4の5インスタンスにリクエストが振られていることを確認し、以下のコマンドを実行してください。このコマンドで5つのインスタンスのうち、一つが停止します。ターミナル1,2をよく見ながら何が起こっているかを確認して見てください。
 ```console
-curl -X POST https://api-tkaburagi.apps.pcf.pcflab.jp/shutdown --insecure
+curl -X POST https://api-tkaburagi.apps.pcf.pcflab.jp/actuator/shutdown --insecure
 {"message":"Shutting down, bye..."}
 ```
 残りのインスタンスからのみレスポンスがあることしばらくすると自動でアプリが復旧することが確認できるでしょう。見逃した場合は何度か実行して見てください。
