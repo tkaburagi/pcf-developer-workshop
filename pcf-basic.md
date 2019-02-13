@@ -29,8 +29,8 @@ cf scale -i 5
 
 次に以下の設定をアプリケーションに加え、Spring Bootのシャットダウンエンドポイントを有効にします。
 ```shell
-cf set-env api-tkaburagi management.security.enabled false
-cf set-env api-tkaburagi endpoints.shutdown.enabled true
+cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown
+cf set-env api-tkaburagi management.endpoint.shutdown.enabled true
 cf restart api-tkaburagi
 ```
 
