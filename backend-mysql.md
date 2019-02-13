@@ -57,15 +57,12 @@ cf create-service p.mysql db-small mysql
 ```java
 package com.example.demo;
 
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "book")
 public class Book {
-    @Id
     @javax.persistence.Id
     private String id;
     private String title;
