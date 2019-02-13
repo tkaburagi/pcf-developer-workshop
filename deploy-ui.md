@@ -16,14 +16,15 @@ applications:
     - pcc
     - mysql
 ```
-PCFでは`apps.internal`というコンテナ間で通信するための内部向けのドメインが付与されています。このドメインは外部からのリクエストは受け付けません。上のマニフェストでは`api-tkaburagi.apps.internal`というルート情報をマップしています。この内部ドメインは[BOSH DNS](https://bosh.io/docs/dns/)により[Service Discovery](https://www.cloudfoundry.org/blog/polyglot-service-discovery-container-networking-cloud-foundry/)されています。
+PCFでは`apps.internal`というコンテナ間で通信するための内部向けのドメインが付与されています。このドメインは外部からのリクエストは受け付けません。上のマニフェストでは`api-tkaburagi.apps.internal`というルート情報をマップしています。この内部ドメインは[BOSH DNS](https://bosh.io/docs/dns/)により[Service Discovery](https://www.cloudfoundry.org/blog/polyglot-service-discovery-container-networking-cloud-foundry/)されています。外からはアクセスできません。`cf push`します。
 
-```shell
-cf push
-curl api-tkaburagi.apps.internal
+```console
+$ cf push
+# curl api-tkaburagi.apps.internal
+curl: (6) Could not resolve host: api-tkaburagi.apps.internal
 ```
 
-エラーが返るはずです。これからデプロイするUIのアプリケーションからはこの内部ドメインを使ってAPIに対してリクエストします。
+リクエストすると、エラーが返るはずです。これからデプロイするUIのアプリケーションからはこの内部ドメインを使ってAPIに対してリクエストします。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
@@ -142,8 +143,11 @@ applications:
 次に`application.properties`を下記のように編集します。
 ```properties
 api.url=http://api-tkaburagi.apps.internal:8080
+<<<<<<< HEAD
 api.url.allbooks=http://api-tkaburagi.apps.internal:8080/allbooks
 api.url.book=http://api-tkaburagi.apps.internal:8080/book
+=======
+>>>>>>> d2a9728f458ca165789184cbcddb374b06b72dd2
 ```
 
 `com.example.demo`の直下に`Book.java`を追加し、下記のように編集します。
@@ -267,14 +271,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class UiService {
 
-    @Value( "${api.url.info}" )
+    @Value( "${api.url}" )
     private String apiUrl;
-
-    @Value( "${api.url.allbooks}" )
-    private String apiUrl1;
-
-    @Value( "${api.url.book}" )
-    private String apiUrl2;
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -288,14 +286,14 @@ public class UiService {
     }
 
     public Model getAllBooks(Model model) throws Exception {
-        String result = restTemplate.getForObject(apiUrl1, String.class);
+        String result = restTemplate.getForObject(apiUrl + "/allbooks", String.class);
         Book[] bList = mapper.readValue(result, Book[].class);
         model.addAttribute("allbooks", bList);
         return  model;
     }
 
     public Model getBookById(@RequestParam("id") String id, Model model) throws Exception {
-        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl2).queryParam("id", id).build().toString();
+        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl + "/book").queryParam("id", id).build().toString();
         String result = restTemplate.getForObject(targetUrl, String.class);
         System.out.println("targetUrl: " + targetUrl);
         Book b = mapper.readValue(result, Book.class);
