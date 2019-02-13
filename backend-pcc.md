@@ -203,164 +203,26 @@ Updated: 2019-02-09T07:09:26Z
 `Status`が`create succeeeded`になっていることを確認します。`provisioning`になっていたら完了するまで待ってください。完了したら`cf bind-service`でbindします。
 ```shell
 cf bind-service api-tkaburagi pcc
+cf env api-tkaburagi
 ```
+
+`cf env`で出力されるユーザ名の`cluster_operator_*************`とパスワードの`*************`とLocatorsの`IP[PORT]`の部分をコピペしてメモ帳に残してください。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
-## CredHubの利用
-CredHub Service Brokerを利用し、セキュアに設定情報をセットします。まずは`cf create-service-key`でサービスキーを作成します。
-
-```console
-$ cf create-service-key pcc pcc-svc-key
-$ cf service-key pcc pcc-svc-key
-Getting key pcc-svc-key for service instance pcc as tkaburagi@pivotal.io...
-
-{
- "distributed_system_id": "0",
- "locators": [
-  "192.168.12.34[55221]"
- ],
- "urls": {
-  "gfsh": "https://cloudcache-7945e3f8-d8c5-4957-88c4-90307c2e9673.run.pcfone.io/gemfire/v1",
-  "pulse": "https://cloudcache-7945e3f8-d8c5-4957-88c4-90307c2e9673.run.pcfone.io/pulse"
- },
- "users": [
-  {
-   "password": "jsZX6TJjhkwewK848hhLA",
-   "roles": [
-    "cluster_operator"
-   ],
-   "username": "cluster_operator_L9szKr9Ss777W4eak158w"
-  },
-  {
-   "password": "xbcZbexkOuI9mZrGwH3VSg",
-   "roles": [
-    "developer"
-   ],
-   "username": "developer_8sbVAyVvBbiUWtNYXkLcg"
-  }
- ],
- "wan": {
-  "sender_credentials": {
-   "active": {
-    "password": "FC8djvalsc73ZWRX4hQig",
-    "username": "gateway_sender_01T6b35pyJZBEXTEFsoh7g"
-   }
-  }
- }
-}
-```
-
-ユーザ名の`cluster_operator_L9szKr9Ss777W4eak158w`とパスワードの`jsZX6TJjhkwewK848hhLA`とLocatorsの`192.168.12.34[55221]`の部分をコピペしてメモ帳に残してください。Credhubのサービスインスタンスを作成します。
-```shell
-cf create-service credhub default pcc-cred  -c '{"pccusername":"cluster_operator_L9szKr9Ss777W4eak158w", "pccpassword":"jsZX6TJjhkwewK848hhLA"}'
-```
-
-```console
-$ cf service pcc-cred
-Service instance: pcc-cred
-Service: credhub
-Bound apps:
-Tags:
-Plan: default
-Description: Stores configuration parameters securely in CredHub
-Documentation url:
-Dashboard:
-
-Last Operation
-Status: create succeeded
-Message:
-Started: 2019-02-11T04:41:14Z
-Updated: 2019-02-11T04:41:14Z
-```
-
-PCCの認証情報を持ったCredHubインスタンスが作成され、これをアプリケーションにbindします。
-```shell
-cf bind-service api-tkaburagi pcc-cred
-```
-
-```console
-$ cf env api-tkaburagi
-Getting env variables for app api-tkaburagi in org pivot-tkaburagi / space playground as tkaburagi@pivotal.io...
-OK
-
-System-Provided:
-{
- "VCAP_SERVICES": {
-  "credhub": [
-   {
-    "binding_name": null,
-    "credentials": {
-     "credhub-ref": "/credhub-service-broker/credhub/f95602af-33fd-422a-815e-fec3dc975ec8/credentials"
-    },
-    "instance_name": "pcc-cred",
-    "label": "credhub",
-    "name": "pcc-cred",
-    "plan": "default",
-    "provider": null,
-    "syslog_drain_url": null,
-    "tags": [
-     "credhub"
-    ],
-    "volume_mounts": []
-   }
-  ],
-  //以下省略
-```
 
 アプリケーションの`application.properties`を次のように編集します。
 ```properties
 spring.data.gemfire.pool.DEFAULT.locators=10.0.8.4[55221]
-spring.data.gemfire.security.username=${vcap.services.pcc-cred.credentials.pccusername}
-spring.data.gemfire.security.password=${vcap.services.pcc-cred.credentials.pccpassword}
+spring.data.gemfire.security.username=${vcap.services.pcc.users.password}
+spring.data.gemfire.security.password=${vcap.services.pcc.users.username}
 ```
-
-アプリケーションからは直接CredHubを参照する必要はなく、CredHubの参照キーを環境変数から取得し、設定ファイルから取得します。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 
 ## GemFireの準備とアプリケーションの起動
 GemFireのサービスキーから`url.gfsh`を取得し、先ほどと同じユーザ名とパスワードでログインします。
-```console
-$ cf service-key pcc pcc-svc-key
-Getting key pcc-svc-key for service instance pcc as tkaburagi@pivotal.io...
-
-{
- "distributed_system_id": "0",
- "locators": [
-  "192.168.12.34[55221]"
- ],
- "urls": {
-  "gfsh": "https://cloudcache-7945e3f8-d8c5-4957-88c4-90307c2e9673.run.pcfone.io/gemfire/v1",
-  "pulse": "https://cloudcache-7945e3f8-d8c5-4957-88c4-90307c2e9673.run.pcfone.io/pulse"
- },
- "users": [
-  {
-   "password": "jsZX6TJjhkwewK848hhLA",
-   "roles": [
-    "cluster_operator"
-   ],
-   "username": "cluster_operator_L9szKr9Ss777W4eak158w"
-  },
-  {
-   "password": "xbcZbexkOuI9mZrGwH3VSg",
-   "roles": [
-    "developer"
-   ],
-   "username": "developer_8sbVAyVvBbiUWtNYXkLcg"
-  }
- ],
- "wan": {
-  "sender_credentials": {
-   "active": {
-    "password": "FC8djvalsc73ZWRX4hQig",
-    "username": "gateway_sender_01T6b35pyJZBEXTEFsoh7g"
-   }
-  }
- }
-}
-```
 
 gfshはGemFireの構成変更などを行うCLIクライアントです。
 ```shell
