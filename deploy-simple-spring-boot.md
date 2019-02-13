@@ -88,13 +88,14 @@ public class ApiController {
     ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping("/")
-    public String helloWolrd() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message","Helloworld V1");
-        jsonObject.put("index", System.getenv("CF_INSTANCE_INDEX"));
-        jsonObject.put("host", System.getenv("CF_INSTANCE_IP"));
-        jsonObject.put("java", System.getProperty("java.vm.version"));
-        return jsonObject.toString();
+    public Map helloWolrd() {
+        log.info("Handling home");      
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("message","Helloworld V1");
+        body.put("index", System.getenv("CF_INSTANCE_INDEX"));
+        body.put("host", System.getenv("CF_INSTANCE_IP"));
+        body.put("java", System.getProperty("java.vm.version"));
+        return body;
     }
 
 }
