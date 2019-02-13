@@ -176,7 +176,11 @@ public class Controller {
     @Autowired
     BookService bookService;
 
-    ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    public ApiController(RestTemplateBuilder builder, ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @RequestMapping("/")
     public String helloWolrd() {
@@ -188,10 +192,9 @@ public class Controller {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/allbooks")
-    public String getAllBook() throws Exception {
-
-        return mapper.writeValueAsString(bookJpaRepository.findAll());
-
+    public Object getAllBook() throws Exception {
+        log.info("Handling allbooks");      
+        return bookJpaRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/book")
@@ -206,7 +209,7 @@ public class Controller {
             ds = "PCC";
         }
 
-        JSONObject jsonObject = new JSONObject(mapper.writeValueAsString(book));
+        JSONObject jsonObject = new JSONObject(this.objectMapper.writeValueAsString(book));
         jsonObject.put("ds",ds);
 
         return jsonObject.toString();

@@ -274,9 +274,13 @@ public class UiService {
     @Value( "${api.url}" )
     private String apiUrl;
 
-    ObjectMapper mapper = new ObjectMapper();
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
-    RestTemplate restTemplate = new RestTemplate();
+    public UiService(RestTemplateBuilder builder, ObjectMapper objectMapper) {
+        this.restTemplate = builder.build();
+        this.objectMapper = objectMapper;
+    }
 
     public AppInfo getAppInfo() throws Exception {
         String result = restTemplate.getForObject(apiUrl, String.class);
@@ -285,15 +289,15 @@ public class UiService {
     }
 
     public Book[] getAllBooks() throws Exception {
-        String result = restTemplate.getForObject(apiUrl1, String.class);
-        Book[] bList = mapper.readValue(result, Book[].class);
+        String result = this.restTemplate.getForObject(apiUrl1, String.class);
+        Book[] bList =  this.objectMapper.readValue(result, Book[].class);
         return  bList;
     }
 
     public Book getBookById(@RequestParam("id") String id) throws Exception {
         String targetUrl = UriComponentsBuilder.fromUriString(apiUrl2).queryParam("id", id).build().toString();
-        String result = restTemplate.getForObject(targetUrl, String.class);
-        Book b = mapper.readValue(result, Book.class);
+        String result = this.restTemplate.getForObject(targetUrl, String.class);
+        Book b =  this.objectMapper.readValue(result, Book.class);
         return b;
     }
 }

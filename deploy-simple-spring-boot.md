@@ -85,8 +85,6 @@ import文がわからない場合は完成版を参照してください。
 @RestController
 public class ApiController {
 
-    ObjectMapper mapper = new ObjectMapper();
-
     @RequestMapping("/")
     public Map helloWolrd() {
         log.info("Handling home");      
