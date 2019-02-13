@@ -64,18 +64,21 @@ api.url.dummy=http://api-tkaburagi.apps.internal:8080/dummy
 @Service
 public class UiController {
 
-    @Autowired
-    UiService uiService;
+    private final UiService uiService;
+
+    public UiController(UiService uiService) {
+        this.uiService = uiService;
+    }
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String home(String id, Model model) throws Exception {
 
         log.info("Handling home");
-        model.addAttribute("appinfo", uiService.getAppInfo());
-        model.addAttribute("allbooks", uiService.getAllBooks());
-        model.addAttribute("searchedBook", uiService.getBookById(id));
-        model.addAttribute("message", uiService.dummy());
+        model.addAttribute("appinfo", this.uiService.getAppInfo());
+        model.addAttribute("allbooks", this.uiService.getAllBooks());
+        model.addAttribute("searchedBook", this.uiService.getBookById(id));
+        model.addAttribute("message", this.uiService.dummy());
         session.setAttribute("iam", "I'm a Session");
         return "ui/index";
     }

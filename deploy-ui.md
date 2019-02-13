@@ -143,11 +143,6 @@ applications:
 次に`application.properties`を下記のように編集します。
 ```properties
 api.url=http://api-tkaburagi.apps.internal:8080
-<<<<<<< HEAD
-api.url.allbooks=http://api-tkaburagi.apps.internal:8080/allbooks
-api.url.book=http://api-tkaburagi.apps.internal:8080/book
-=======
->>>>>>> d2a9728f458ca165789184cbcddb374b06b72dd2
 ```
 
 `com.example.demo`の直下に`Book.java`を追加し、下記のように編集します。
@@ -271,9 +266,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class UiService {
 
-    @Value( "${api.url}" )
-    private String apiUrl;
-
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
@@ -282,25 +274,38 @@ public class UiService {
         this.objectMapper = objectMapper;
     }
 
+    @Value( "${api.url}" )
+    private String apiUrl;
+
     public AppInfo getAppInfo() throws Exception {
-        String result = restTemplate.getForObject(apiUrl, String.class);
-        AppInfo a = mapper.readValue(result, AppInfo.class);
+        String result = this.restTemplate.getForObject(apiUrl, String.class);
+        AppInfo a = this.objectMapper.readValue(result, AppInfo.class);
         return  a;
     }
 
     public Book[] getAllBooks() throws Exception {
-        String result = this.restTemplate.getForObject(apiUrl1, String.class);
-        Book[] bList =  this.objectMapper.readValue(result, Book[].class);
+        String result = this.restTemplate.getForObject(apiUrl + "/allbooks", String.class);
+        Book[] bList = this.objectMapper.readValue(result, Book[].class);
         return  bList;
     }
 
     public Book getBookById(@RequestParam("id") String id) throws Exception {
-        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl2).queryParam("id", id).build().toString();
+        String targetUrl = UriComponentsBuilder.fromUriString(apiUrl + "/book").queryParam("id", id).build().toString();
         String result = this.restTemplate.getForObject(targetUrl, String.class);
-        Book b =  this.objectMapper.readValue(result, Book.class);
+        Book b = this.objectMapper.readValue(result, Book.class);
         return b;
     }
+
+    @HystrixCommand(fallbackMethod = "executeFallback")
+    public String dummy() {
+        return this.restTemplate.getForObject(apiUrl + "/dummy", String.class);
+    }
+
+    public String executeFallback(Throwable e) {
+        return "Not available";
+    }
 }
+
 ```
 
 `com.example.demo`の直下に`UiController.java`を追加し、下記のように編集します。
@@ -318,16 +323,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Service
 public class UiController {
 
-    @Autowired
-    UiService uiService;
+    private final UiService uiService;
 
+    public UiController(UiService uiService) {
+        this.uiService = uiService;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String home(String id, Model model) throws Exception {
         log.info("Handling home");
-        model.addAttribute("appinfo", uiService.getAppInfo());
-        model.addAttribute("allbooks", uiService.getAllBooks());
-        model.addAttribute("searchedBook", uiService.getBookById(id));
+        model.addAttribute("appinfo", this.uiService.getAppInfo());
+        model.addAttribute("allbooks", this.uiService.getAllBooks());
+        model.addAttribute("searchedBook", this.uiService.getBookById(id));
         return "ui/index";
     }
 }

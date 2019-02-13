@@ -128,9 +128,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BookService {
-    @Autowired
-    BookJpaRepository bookJpaRepository;
 
+    private final BookJpaRepository bookJpaRepository;
+
+    public Controller(BookJpaRepository bookJpaRepository) {
+        this.bookJpaRepository = bookJpaRepository;
+    }
     private volatile boolean cacheMiss = false;
 
     public boolean isCacheMiss() {
@@ -148,7 +151,7 @@ public class BookService {
 
         setCacheMiss();
 
-        Book book = bookJpaRepository.findBookById(id);
+        Book book = this.bookJpaRepository.findBookById(id);
 
         return book;
     }
@@ -170,15 +173,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-    @Autowired
-    BookJpaRepository bookJpaRepository;
-
-    @Autowired
-    BookService bookService;
-
+    private final BookJpaRepository bookJpaRepository;
+    private final BookService bookService;
     private final ObjectMapper objectMapper;
 
-    public ApiController(RestTemplateBuilder builder, ObjectMapper objectMapper) {
+
+    public ApiController(BookJpaRepository bookJpaRepository, BookService bookService, ObjectMapper objectMapper) {
+        this.bookJpaRepository = bookJpaRepository;
+        this.bookService = bookService;
         this.objectMapper = objectMapper;
     }
 

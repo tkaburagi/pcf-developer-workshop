@@ -150,7 +150,6 @@ public class DbCloudConfig extends AbstractCloudConfig {
 `ApiController.java`を下記のように編集します。
 ```java
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -158,8 +157,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiController {
 
-    @Autowired
-    BookJpaRepository bookJpaRepository;
+    private final BookJpaRepository bookJpaRepository;
+
+    public Controller(BookJpaRepository bookJpaRepository) {
+        this.bookJpaRepository = this.bookJpaRepository;
+    }
 
     @RequestMapping("/")
     public Map helloWolrd() {
@@ -174,7 +176,7 @@ public class ApiController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/allbook")
     public Object getAllBook() throws Exception{
-      return bookJpaRepository.findAll();
+      return this.bookJpaRepository.findAll();
     }
 }
 ```
