@@ -12,7 +12,7 @@ PCFのオートヒーリングには3つのレイヤがあります。コンテ�
 ```shell
 watch -n 1 'curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq'
 ```
-watchがない場合、`while true;do curl -s ttps://api-tkaburagi.apps.pcfone.io/;echo;sleep 1;done`でも大丈夫です。
+watchがない場合、`while true;do curl -s https://api-tkaburagi.apps.pcf.pcflab.jp/;echo;sleep 1;done`でも大丈夫です。
 このターミナルではアプリケーションのインデックス数やリクエストの負荷分散などの状況を見ます。
 
 #### ターミナル2
