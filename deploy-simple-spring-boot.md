@@ -129,7 +129,7 @@ cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
 
 `tkaburagi`の部分は自身のSTUDENT_IDに置き換えてください。同じレスポンスがサーバから返ってくるでしょう。
 ```shell
-curl https://api-tkaburagi.apps.pcfone.io | jq
+curl api-tkaburagi.apps.pcf.pcflab.jp  | jq
 ```
 
 以上で最初のアプリケーションのデプロイは終了です。`cf`コマンドでコンテナのビルド、保存やアプリケーションの外部公開や運用監視の設定などの作業を完結し、**Source to URL**を実現しています。
@@ -143,7 +143,7 @@ curl https://api-tkaburagi.apps.pcfone.io | jq
 ### 基本的なcf cli
 アプリケーションをスケールアウトしたいときは、`cf scale`コマンドを利用します。
 ```shell
-cf scale -i 2
+cf scale -i 2 api-tkaburagi
 ```
 ```console
 $ cf app api-tkaburagi
