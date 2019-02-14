@@ -85,6 +85,8 @@ import文がわからない場合は完成版を参照してください。
 @RestController
 public class ApiController {
 
+    private static Logger log = LoggerFactory.getLogger(ApiController.class);
+
     @RequestMapping("/")
     public Map helloWolrd() {
         log.info("Handling home");      
@@ -177,7 +179,7 @@ $ curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
 {
   "message": "Helloworld V1",
   "index": "1",
-  "host": "10.0.5.5",
+  "host": "10.0.4.18",
   "java": "11.0.2+9"
 }
 ```

@@ -158,8 +158,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
 
     private final BookJpaRepository bookJpaRepository;
+    private static Logger log = LoggerFactory.getLogger(ApiController.class);
 
-    public Controller(BookJpaRepository bookJpaRepository) {
+    public RestController(BookJpaRepository bookJpaRepository) {
         this.bookJpaRepository = this.bookJpaRepository;
     }
 
@@ -174,9 +175,10 @@ public class ApiController {
         return body;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/allbook")
-    public Object getAllBook() throws Exception{
-      return this.bookJpaRepository.findAll();
+    @RequestMapping(method = RequestMethod.GET, value = "/allbooks")
+    public Object getAllBook() throws Exception {
+        log.info("Handling allbooks");      
+        return bookJpaRepository.findAll();
     }
 }
 ```
