@@ -1,5 +1,5 @@
 # セッションを外部ストアに保存する
-セッション情報を外部のデータストアに保存することは信頼性が高くスケーラブルなアプリケーションを開発する上でとても重要です。ここでは先に利用したPivotal Cloud CacheとBuildpacksの機能を使って簡単にSession State　Cahchingを実現します。
+セッション情報を外部のデータストアに保存することは信頼性が高くスケーラブルなアプリケーションを開発する上でとても重要です。ここでは先に利用したPivotal Cloud CacheとBuildpacksの機能を使って簡単にSession State Cachingを実現します。
 
 ## PCCインスタンスのアップデート
 ```shell
@@ -8,7 +8,7 @@ cf bind-service ui-tkaburagi pcc
 ```
 RedisもしくはPCCのインスタンスで`tag`に`session-replication`を持つインスタンスもしくはインスタンス名に`session-replication`が入っているインスタンスをbindするとHTTP SessionがRedisもしくはPCCに格納されます。上記のコマンドは前に作ったPCCのインスタんしに`session-replication`のタグを付与しています。
 
-[ドキュメント](https://github.com/cloudfoundry/java-buildpack/blob/a0cf9ece33ddcc763079668bd40fbd99b66fbd7a/docs/container-tomcat.md)
+詳細は[ドキュメント](https://github.com/cloudfoundry/java-buildpack/blob/a0cf9ece33ddcc763079668bd40fbd99b66fbd7a/docs/container-tomcat.md)で確認してください。
 
 
 ```console
@@ -61,6 +61,7 @@ import org.springframework.session.data.gemfire.config.annotation.web.http.Enabl
 
 @EnableGemFireHttpSession(poolName = "DEFAULT")
 @ClientCacheApplication
+@EnableSecurity
 public class PccConfig {
 
 }
@@ -108,8 +109,9 @@ cf bind-service ui-tkaburagi pcc-cred-api
 
 アプリケーションの`application.properties`を次のように編集します。
 ```properties
-spring.data.gemfire.security.username=${vcap.services.pcc-cred.credentials.pccusername}
-spring.data.gemfire.security.password=${vcap.services.pcc-cred.credentials.pccpassword}
+spring.data.gemfire.pool.DEFAULT.locators=${vcap.services.pcc.credentials.locators[0]}
+spring.data.gemfire.security.username=${vcap.services.pcc.credentials.users[0].username}
+spring.data.gemfire.security.password=${vcap.services.pcc.credentials.users[0].password}
 ```
 
 アプリケーションをデプロイしましょう。
