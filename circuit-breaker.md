@@ -47,21 +47,14 @@ api.url.dummy=http://api-tkaburagi.apps.internal:8080/dummy
 
 `UiService.java`のクラス内に以下の変数とメソッドを追加します。
 ```java
- @Value( "${api.url.dummy}" )
- private String dummyUrl;
- 
- public Model dummy(Model model) {
-        String message = restTemplate.getForObject(dummyUrl, String.class);
-        model.addAttribute("message", message);
-        return model;
-    }
+ public String dummy() {
+     return this.restTemplate.getForObject(apiUrl + "/dummy", String.class);
+ }
 ```
 
 `com.example.demo`の直下に`UiController.java`を下記のように編集します。
 ```java
-@Component
 @Controller
-@Service
 public class UiController {
 
     private final UiService uiService;
@@ -122,14 +115,13 @@ Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセス�
 ## Circuit Breakerの導入
 `UiService.java`の先ほどの`dummyメソッド`を以下のように変更します。
 ```java
-    @HystrixCommand(fallbackMethod = "executeFallback")
-    public String dummy() {
-        return restTemplate.getForObject(dummyUrl, String.class);
-    }
-
-    public String executeFallback(Throwable e) {
-        return "Not available";
-    }
+@HystrixCommand(fallbackMethod = "executeFallback")
+ public String dummy() {
+     return this.restTemplate.getForObject(apiUrl + "/dummy", String.class);
+}
+ public String executeFallback(Throwable e) {
+     return "Not available";
+}
 ```
 
 `@HystrixCommand`を`dummyメソッド`に付与し、`fallbackMethod`(このメソッドで例外が発生したときに呼ばれるメソッド)を`executeFallback`として定義しています。最後に`DemoUiApplication.java`を以下のように変更します。

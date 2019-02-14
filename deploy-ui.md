@@ -4,7 +4,7 @@
 ```yaml
 applications:
 - name: api-tkaburagi
-  buildpack: https://github.com/cloudfoundry/java-buildpack.git#v4.16
+  buildpack: java_buildpack_offline
   path: target/demo-0.0.1-SNAPSHOT.jar
   memory: 1g
  routes:
@@ -26,8 +26,6 @@ curl: (6) Could not resolve host: api-tkaburagi.apps.internal
 
 リクエストすると、エラーが返るはずです。これからデプロイするUIのアプリケーションからはこの内部ドメインを使ってAPIに対してリクエストします。
 
-**ここまで完了したら進捗シートにチェックをしてください。**
-
 ## UIアプリの開発
 [Spring Initializr](https://start.spring.io/)にアクセスして以下のようにSpring Bootプロジェクトを作成します。
 * Group: そのまま
@@ -41,7 +39,7 @@ manifest.ymlを追加します。`name`の`tkaburagi`の部分は自分のIDに�
 ```yaml
 applications:
 - name: ui-tkaburagi
-  buildpack: https://github.com/cloudfoundry/java-buildpack.git#v4.16
+  buildpack: java_buildpack_offline
   path: target/demo-0.0.1-SNAPSHOT.jar
   memory: 1g
   env:
@@ -147,11 +145,8 @@ api.url=http://api-tkaburagi.apps.internal:8080
 
 `com.example.demo`の直下に`Book.java`を追加し、下記のように編集します。
 ```java
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.io.Serializable;
 
-@JsonSerialize
 public class Book implements Serializable {
     private String id;
     private String title;
@@ -205,11 +200,8 @@ public class Book implements Serializable {
 ```java
 package com.example.demo;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.io.Serializable;
 
-@JsonSerialize
 public class AppInfo implements Serializable {
     private String message;
     private String index;
@@ -295,15 +287,6 @@ public class UiService {
         Book b = this.objectMapper.readValue(result, Book.class);
         return b;
     }
-
-    @HystrixCommand(fallbackMethod = "executeFallback")
-    public String dummy() {
-        return this.restTemplate.getForObject(apiUrl + "/dummy", String.class);
-    }
-
-    public String executeFallback(Throwable e) {
-        return "Not available";
-    }
 }
 
 ```
@@ -318,8 +301,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Component
-@Controller
 @Service
 public class UiController {
 
