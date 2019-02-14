@@ -1,5 +1,5 @@
 # Using Pivotal Cloud Cache
-ここではMarkeplace上のPivotal Cloud Cacheを利用し、Spring BootのアプリケーションからPivotal Cloud Cacheを扱います。GemFireなどのインメモリデータグリッドにアクセスするには`Look Asideパターン`と`Inline Cache`パターンの二つがありますが、今回は`Look Aside`パターンで実装します。
+ここではMarkeplace上のPivotal Cloud Cacheを利用し、Spring BootのアプリケーションからPivotal Cloud Cacheを扱います。GemFireなどのインメモリデータグリッドにアクセスするには`Look Aside`パターンと`Inline Cache`パターンの二つがありますが、今回は`Look Aside`パターンで実装します。
 
 詳細は[こちら](https://content.pivotal.io/blog/an-introduction-to-look-aside-vs-inline-caching-patterns)を参考にしてください。
 
@@ -34,16 +34,32 @@ cf create-service p-cloudcache dev-plan pcc
 
 
 ## アプリケーションの修正
+`pom.xml`に以下のエントリを追加します。
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-web</artifactId>
+   <exclusions>
+       <exclusion>
+           <groupId>org.apache.logging.log4j</groupId>
+           <artifactId>log4j-to-slf4j</artifactId>
+       </exclusion>
+   </exclusions>
+</dependency>
+<!-- 省略 -->
+<dependency>
+   <groupId>org.springframework.geode</groupId>
+   <artifactId>spring-gemfire-starter</artifactId>
+   <version>1.0.0.M3</version>
+</dependency>
+```
+
 `src/main/java/com/example/demo/entity`に`BookGemfire.java` を下記のように編集します。
 
 ```java
 import org.springframework.data.annotation.Id;
 import org.springframework.data.gemfire.mapping.annotation.Region;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-@Entity
 @Region(name = "book")
 public class BookGemfire {
     @Id
@@ -105,15 +121,15 @@ public class PccConfig {
 
 `src/main/java/com/example/demo`に`repository/gem`パッケージを作成し、`BookGemfireRepository`を追加して下記のように編集します。
 ```java
-import com.example.demo.entity.Book;
+import com.example.demo.entity.BookGemFire;
 import org.springframework.data.gemfire.repository.GemfireRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookGemFireRepository extends GemfireRepository<Book, String> {
+public interface BookGemFireRepository extends GemfireRepository<BookGemFire, String> {
 
     @Query("SELECT * FROM /book b WHERE b.id = $1")
-    Book findBookById(String id);
+    BookGemFire findBookById(String id);
 
 }
 ```
@@ -131,9 +147,10 @@ public class BookService {
 
     private final BookJpaRepository bookJpaRepository;
 
-    public Controller(BookJpaRepository bookJpaRepository) {
+    public BookService(BookJpaRepository bookJpaRepository) {
         this.bookJpaRepository = bookJpaRepository;
     }
+
     private volatile boolean cacheMiss = false;
 
     public boolean isCacheMiss() {
@@ -171,7 +188,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class Controller {
+public class ApiController {
 
     private final BookJpaRepository bookJpaRepository;
     private final BookService bookService;
@@ -184,13 +201,17 @@ public class Controller {
         this.objectMapper = objectMapper;
     }
 
+    private static Logger log = LoggerFactory.getLogger(ApiController.class);
+
     @RequestMapping("/")
-    public String helloWolrd() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message","Helloworld V1");
-        jsonObject.put("index", System.getenv("CF_INSTANCE_INDEX"));
-        jsonObject.put("host", System.getenv("CF_INSTANCE_IP"));
-        return jsonObject.toString();
+    public Map helloWolrd() {
+        log.info("Handling home");      
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("message","Helloworld V1");
+        body.put("index", System.getenv("CF_INSTANCE_INDEX"));
+        body.put("host", System.getenv("CF_INSTANCE_IP"));
+        body.put("java", System.getProperty("java.vm.version"));
+        return body;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/allbooks")
@@ -201,7 +222,7 @@ public class Controller {
 
     @RequestMapping(method = RequestMethod.GET, value = "/book")
     public String getBookById(@RequestParam(value = "id") String id) throws Exception {
-
+        log.info("Handling book");      
         String ds="";
         Book book = bookService.getBookById(id);
         Boolean b = bookService.isCacheMiss();
@@ -212,9 +233,8 @@ public class Controller {
         }
 
         JSONObject jsonObject = new JSONObject(this.objectMapper.writeValueAsString(book));
-        jsonObject.put("ds",ds);
 
-        return jsonObject.toString();
+        return jsonObject.put("ds",ds).toString();
     }
 
 }
@@ -253,9 +273,39 @@ cf env api-tkaburagi
 
 アプリケーションの`application.properties`を次のように編集します。
 ```properties
-spring.data.gemfire.pool.DEFAULT.locators=10.0.8.4[55221]
-spring.data.gemfire.security.username=${vcap.services.pcc.users.password}
-spring.data.gemfire.security.password=${vcap.services.pcc.users.username}
+spring.data.gemfire.pool.DEFAULT.locators=${vcap.services.pcc.credentials.locators[0]}
+spring.data.gemfire.security.username=${vcap.services.pcc.credentials.users[0].username}
+spring.data.gemfire.security.password=${vcap.services.pcc.credentials.users[0].password}
+```
+
+環境変数にセットされている値はSpring Boot Actuatorの`/env`エンドポイントにアクセスすると取得できます。デフォルトではオフになっているのでオンにします。
+```shell
+cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env
+cf restart api-tkaburagi
+```
+
+```console
+curl http://api-tkaburagi.apps.pcf.pcflab.jp/actuator/env | jq
+{
+  "activeProfiles": [
+    "cloud"
+  ],
+  "propertySources": [
+    {
+      "name": "server.ports",
+      "properties": {
+        "local.server.port": {
+          "value": 8080
+        }
+      }
+    },
+    {
+      "name": "cloudcache-configuration",
+      "properties": {
+        "spring.data.gemfire.management.http.port": {
+          "value": "-1"
+        },
+//省略
 ```
 
 **ここまで完了したら進捗シートにチェックをしてください。**
