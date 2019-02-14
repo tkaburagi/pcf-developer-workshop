@@ -83,6 +83,8 @@ cf app api-tkaburagi | grep "%"
 
 数秒に一度実行するとスケールインする様子がわかります。
 
+確認できたら、オートスケールはオフに戻してください。
+
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 ## Blue-Green Deploy
@@ -167,17 +169,3 @@ api-tkaburagi   started           1/1         1G       1G     api-tkaburagi.apps
 ```
 
 **ここまで完了したら進捗シートにチェックをしてください。**
-
-
-### Javaをバージョンアップする
-PCFでは先ほど試したBlue-Greenデプロイの方法を利用することで簡単にJavaのバージョンを変更することができます。
-```console
-$ curl https://api-tkaburagi.apps.pcf.pcflab.jp/ --insecure | jq
-{
-  "message": "Helloworld V1",
-  "index": "0",
-  "host": "10.0.5.5",
-  "java": "11.0.2+9"
-}
-```
-現在のJavaのバージョンは`11.0.2+9`です。

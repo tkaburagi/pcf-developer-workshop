@@ -1,4 +1,4 @@
-# Micrometer とPrometheusを使ってメトリクスを監視する
+# MicrometerとPrometheusを使ってメトリクスを監視する
 
 [Micrometer](https://micrometer.io/)はベンダーニュートラルなメトリクス収集のためのエンドポイントを提供するツールです。MicrometerはPivotalが開発しています。Prometheus, Datadogなど様々なライブラリがMicrometerに対応しています。今回はPrometheusを利用します。
 
@@ -10,9 +10,9 @@
 </dependency>
 ```
 
-次に`application.properties`に以下を追記します。
-```properties
-management.endpoints.web.exposure.include=prometheus
+次に`cf set-env`でアプリに環境変数をセットしエンドポイントを有効にします。
+```shell
+cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env,prometheus
 ```
 
 設定はこれだけです。アプリケーションをpushし、エンドポイントにアクセスをしてみます。
@@ -60,8 +60,21 @@ value:
 今回は事前に全員分の設定をしていますが、[promregator](https://github.com/promregator/promregator)を利用すると個別で設定する必要がなくなります。
 `https://prometheus.sys.pas.ik.am`をブラウザで開きます。
 
+JVM関連のメトリクスを選んでグラフに表示されることを確認してください。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/prometheus.png)
 
-# Micrometer とPCF Metricsを使ってメトリクスを監視する
+**ここまで完了したら進捗シートにチェックをしてください。**
 
 # ELKでログモニタリングする
-//TODO
+`https://kibana.sys.pas.ik.am/`をブラウザで開きます。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/kibana-1.png)
+
+`Add a Filter+`を選択し以下のフィルタの設定をします。アプリ名はご自身の環境に合わせてください。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/kibana-2.png)
+
+自分のアプリケーションだけにフィルタリングされアプリログも表示されることを確認してください。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/kibana-3.png)
+
+時間のある方は`org_name`や`space_name`など色々なフィルタを試してみてください。
+
+**ここまで完了したら進捗シートにチェックをしてください。**
