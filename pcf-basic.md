@@ -97,7 +97,7 @@ while true; do curl -s http://api-tkaburagi.apps.pcf.pcflab.jp; echo; sleep 1;do
 
 ### アプリケーションの修正
 ```java
-jsonObject.put("message","Helloworld V2");
+body.put("message","Helloworld V2");
 ```
 アプリケーションの上記の行の文字列を`V1`から`V2`に変更します。(どのような変更でもいいです。)
 
