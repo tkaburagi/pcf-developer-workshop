@@ -2,7 +2,7 @@
 ここでは[Zipkin](https://zipkin.io/)を使って分散トレーシングを行う設定を行います。ZipkinはTwitter社によって開発されたOSSの分散トレーシングシステムです。
 
 ## アプリケーションの修正
-`ui-tkaburagi`と`api-tkaburagi`に以下の設定を追加し再度pushします。
+`ui-tkaburagi`と`api-tkaburagi`に以下の設定を追加し再度pushします。`spring.application.name`はアプリごとに変える必要があるので注意してください。
 
 `application.properties`
 ```properties
@@ -27,3 +27,5 @@ spring.sleuth.sampler.probability=1.0
 設定は以上です。`ui-tkaburagi`と`api-tkaburagi`両方に実施してください。
 
 ## Zipkinダッシュボードにアクセス
+`https://zipkin.sys.pas.ik.am/`にブラウザでアクセスしてください。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/zipkin-1.png)
