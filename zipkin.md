@@ -37,3 +37,5 @@ spring.sleuth.sampler.probability=1.0
 
 各TraceやSpanを展開すると詳細を見ることができます。
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/zipkin-3.png)
+
+**ここまで完了したら進捗シートにチェックをしてください。**
