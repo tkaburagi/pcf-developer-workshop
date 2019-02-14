@@ -28,4 +28,12 @@ spring.sleuth.sampler.probability=1.0
 
 ## Zipkinダッシュボードにアクセス
 `https://zipkin.sys.pas.ik.am/`にブラウザでアクセスしてください。
+
+検索ボックスから以下のように自分のアプリ名でフィルタリングできるように設定してください。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/zipkin-2.png)
+
+以下のようなビューが表示されるはずです。
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/zipkin-1.png)
+
+各TraceやSpanを展開すると詳細を見ることができます。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/zipkin-3.png)
