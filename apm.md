@@ -26,3 +26,5 @@ cf bind-service ui-tkaburagi dynatrace-service
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/apm-1.png)
 
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/apm-2.png)
+
+**ここまで完了したら進捗シートにチェックをしてください。**

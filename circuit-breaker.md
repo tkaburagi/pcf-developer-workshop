@@ -40,11 +40,6 @@
 </project>
 ```
 
-次に`application.properties`を下記のように編集します。
-```properties
-api.url.dummy=http://api-tkaburagi.apps.internal:8080/dummy
-```
-
 `UiService.java`のクラス内に以下の変数とメソッドを追加します。
 ```java
  public String dummy() {
