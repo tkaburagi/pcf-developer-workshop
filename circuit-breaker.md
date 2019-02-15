@@ -142,7 +142,7 @@ Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセス�
 例外が発生しているメソッドの処理は`fallbackMethod`が実行され、`No available`というメッセージが表示され、そのほかの機能は正常に動作していることがわかります。
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/cb-2.png)
 
-Circuit Breakerにはこの他にも様々な設定を行うことがきます。
+**Hystrix**にはこの他にも様々な設定を行うことがきます。
 
 [https://github.com/Netflix/Hystrix/wiki/Configuration](https://github.com/Netflix/Hystrix/wiki/Configuration
 )
