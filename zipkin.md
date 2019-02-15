@@ -1,5 +1,5 @@
 # Zipkinで分散トレーシングをする
-ここでは[Zipkin](https://zipkin.io/)を使って分散トレーシングを行う設定を行います。ZipkinはTwitter社によって開発されたOSSの分散トレーシングシステムです。
+ここでは[Zipkin](https://zipkin.io/)を使って分散トレーシングを行う設定を行います。Zipkinは元々はTwitter社によって開発されたOSSの分散トレーシングシステムですが、現在はApache Foundationのプロジェクトして主にPivotalのメンバーを中心に開発されています。
 
 ## アプリケーションの修正
 `ui-tkaburagi`と`api-tkaburagi`に以下の設定を追加し再度pushします。`spring.application.name`はアプリごとに変える必要があるので注意してください。
