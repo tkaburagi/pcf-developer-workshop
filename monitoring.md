@@ -63,6 +63,53 @@ value:
 JVM関連のメトリクスを選んでグラフに表示されることを確認してください。
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/prometheus.png)
 
+# Circuit BreakerをMicrometerとPrometheusで監視する
+`ui-tkaburagi`のアプリの`pom.xml`に以下のエントリを追加します。
+```xml
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-prometheus</artifactId>
+</dependency>
+```
+
+次に`application.properties`に以下を追加します。
+```properties
+management.endpoints.web.exposure.include=*
+```
+
+アプリケーションをpushします。
+```shell
+./mvnw clean package -DskipTests=true && cf push
+curl https://ui-tkaburagi.apps.pcf.pcflab.jp/actuator/hystrix.stream --insecure
+```
+`curl`コマンドのターミナルはそのままにしておいてください。一度Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスし、上の`curl`の出力を確認しましょう。Actuatorの`hystrix.stream`エンドポイントでCircuit Breakerの状態がストリーミングされます。次に以下のコマンドを実行してください。HystrixのメトリクスがMicrometerのにbindする設定が`AutoConfigured`され、`prometheus`エンドポイントからメトリクスを確認できます。
+```console
+$ curl ui-tkaburagi.apps.pcf.pcflab.jp/actuator/prometheus
+# ...
+# HELP tomcat_sessions_created_sessions_total
+# TYPE tomcat_sessions_created_sessions_total counter
+tomcat_sessions_created_sessions_total 0.0
+# HELP jvm_gc_live_data_size_bytes Size of old generation memory pool after a full GC
+# TYPE jvm_gc_live_data_size_bytes gauge
+jvm_gc_live_data_size_bytes 4.7678488E7
+# HELP hystrix_latency_total_seconds_max
+# TYPE hystrix_latency_total_seconds_max gauge
+hystrix_latency_total_seconds_max{group="UiService",key="dummy",} 0.0
+# HELP hystrix_latency_total_seconds
+# TYPE hystrix_latency_total_seconds summary
+hystrix_latency_total_seconds_count{group="UiService",key="dummy",} 2.0
+hystrix_latency_total_seconds_sum{group="UiService",key="dummy",} 0.126
+# HELP jvm_threads_states_threads The current number of threads having NEW state
+# ...
+```
+
+最後にPrometheusのダッシュボードでメトリクスを確認してみます。
+
+`https://prometheus.sys.pas.ik.am`をブラウザで開きます。
+先ほど同様にHystrix関連のメトリクスを見つけてグラフに表示させてみましょう。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/hystrix-prome-1.png)
+
+
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 # ELKでログモニタリングする
