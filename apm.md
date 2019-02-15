@@ -16,9 +16,13 @@ cf bind-service api-tkaburagi dynatrace-service
 cf bind-service ui-tkaburagi dynatrace-service
 ```
 
-`environmentid`, `apitoken`, `apiurl`には先ほどメモした内容を入力します。
+`environmentid`, `apitoken`, `apiurl`には先ほどメモした内容を入力します。`apiurl`は`https://<envid>.live.dynatrace.com/api`のような形になります。
 
 ## Dynatrace Dashboardへアクセス
 自分のアカウントでDynatraceにログインしてください。
 
+`Dashboard` > `Home`と進むとアプリケーションが監視対象になっていることがわかります。ドリルダウンしてアプリケーションのパフォーマンス情報を見て見ましょう。
 
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/apm-1.png)
+
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/apm-2.png)
