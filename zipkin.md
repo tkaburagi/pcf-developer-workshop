@@ -4,14 +4,14 @@
 ## アプリケーションの修正
 `ui-tkaburagi`と`api-tkaburagi`に以下の設定を追加し再度pushします。`spring.application.name`はアプリごとに変える必要があるので注意してください。
 
-`application.properties`
+`application.properties`を下記のように編集します。
 ```properties
 spring.zipkin.base-url=https://zipkin.sys.pas.ik.am
 spring.application.name=ui-tkaburagi
 spring.sleuth.sampler.probability=1.0
 ```
 
-`pom.xml`
+`pom.xml`を下記のように編集します。
 ```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
