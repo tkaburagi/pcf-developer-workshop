@@ -268,9 +268,6 @@ cf env api-tkaburagi
 
 `cf env`で出力されるユーザ名の`cluster_operator_*************`とパスワードの`*************`とLocatorsの`IP[PORT]`の部分をコピペしてメモ帳に残してください。
 
-**ここまで完了したら進捗シートにチェックをしてください。**
-
-
 アプリケーションの`application.properties`を次のように編集します。
 ```properties
 spring.data.gemfire.pool.DEFAULT.locators=${vcap.services.pcc.credentials.locators[0]}
