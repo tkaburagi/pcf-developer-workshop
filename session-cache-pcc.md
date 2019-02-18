@@ -102,9 +102,9 @@ public String home(String id, Model model, HttpSession session) throws Exception
 </html>
 ```
 
-[PCCを利用する](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/backend-pcc.md)の手順同様、PCCの認証情報はCredHubから取得します。
+[PCCを利用する](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/backend-pcc.md)の手順同様、PCCをUIアプリにバインドします。
 ```shell
-cf bind-service ui-tkaburagi pcc-cred-api
+cf bind-service ui-tkaburagi pcc
 ```
 
 アプリケーションの`application.properties`を次のように編集します。
