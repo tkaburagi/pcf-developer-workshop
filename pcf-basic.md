@@ -17,13 +17,13 @@ watchがない場合、`while true;do curl -s https://api-tkaburagi.apps.pcf.pcf
 
 #### ターミナル2
 ```shell
-watch -n 1 cf app
+watch -n 1 cf app api-tkaburagi
 ```
 watchがない場合は上記同様です。このターミナルではアプリケーションの状態を見ます。
 
 別のターミナルでアプリケーションをスケールアウトします。
 ```shell
-cf scale -i 5
+cf scale -i 5 api-tkaburagi
 ```
 ターミナル1で負荷分散をしていること、ターミナル2でアプリケーションが5インスタンス`running`になっていることを確認しましょう。
 
