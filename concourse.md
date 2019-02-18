@@ -212,12 +212,12 @@ public Object getText() {
 ```
 
 アプリケーションを修正したらGithubにコミットします。GitにコミットするとConcourseから更新情報が取得され自動的にパイプラインが稼働します。`pcf-workshop-app`ディレクトリにいることを確認してください。
-```shell
-pwd 
+```console
+$ pwd 
 path/to/api-tkaburagi
-git add .
-git commit -m "modified"
-git push origin master
+$ git add .
+$ git commit -m "modified"
+$ git push origin master
 ```
 
 Web GUIでConcourseが実行中のステータスに遷移していることを確認してください。10秒ほど経過すると実行されるはずです。
