@@ -239,6 +239,10 @@ public class ApiController {
 
 }
 ```
+アプリをビルドしてpushします。
+```shell
+./mvnw clean package -DskipTests=true && cf push --no-start
+```
 
 次に、PCCインスタンスをアプリケーションにbindしていきます。まず先ほどのインスタンスが作成完了しているかを確認します。
 ```console
