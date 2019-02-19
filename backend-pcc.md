@@ -313,7 +313,7 @@ curl http://api-tkaburagi.apps.pcf.pcflab.jp/actuator/env | jq
 
 
 ## GemFireの準備とアプリケーションの起動
-GemFireのサービスキーから`url.gfsh`を取得し、先ほどと同じユーザ名とパスワードでログインします。
+GemFireのcredenatilasから`url.gfsh`を取得し、先ほどと同じユーザ名とパスワードでログインします。
 
 gfshはGemFireの構成変更などを行うCLIクライアントです。
 ```shell
@@ -323,7 +323,7 @@ gfsh> create region --name=book --type=REPLICATE
 gfsh> list regions
 ```
 
-次にWebクライアントのPulseでGUI上で見てみます。Webブラウザを開いてサービスキーから取得できる`url.pulse`にアクセスしてください。ユーザ名とパスワードは同じです。ログインすると以下の画面が見えます。
+次にWebクライアントのPulseでGUI上で見てみます。Webブラウザを開いてGemFireのcredenatilasから取得できる`url.pulse`にアクセスしてください。ユーザ名とパスワードは同じです。ログインすると以下の画面が見えます。
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/pulse-1.png)
 
 `Data Browser`をクリックします。
