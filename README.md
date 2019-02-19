@@ -39,4 +39,4 @@ space:          development
 
 # ドキュメント
 * [進捗確認シート](https://docs.google.com/spreadsheets/d/1pSoTiZ3pL4wzOwpTHmEixJxVbbtfOfNP5_bxAH6KU3w/edit?usp=sharing)
-* [説明資料]()
+* [説明資料](https://docs.google.com/presentation/d/1gj41oGsGXIoWiha3-ucSyL1SDWbKkCC8GM9amnQqNWw/edit?usp=sharing)
