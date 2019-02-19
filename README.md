@@ -11,6 +11,8 @@
 * [APMツールを利用する](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/apm.md)
 * [ConcourseでCIする](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/concourse.md)
 
+# アプリケーションイメージ
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/readme-1.png)
 
 # PCF環境へのログイン
 Pivotal Cloud Foundryの環境へログインします。
