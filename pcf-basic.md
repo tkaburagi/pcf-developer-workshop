@@ -169,3 +169,8 @@ api-tkaburagi   started           1/1         1G       1G     api-tkaburagi.apps
 ```
 
 **ここまで完了したら進捗シートにチェックをしてください。**
+
+## Advanced
+時間のある方は`Java Buildpack`のBlue Greenアップグレードに挑戦してみてください。Java Buildpacksのリリースは[こちら](https://github.com/cloudfoundry/java-buildpack/releases)です。
+
+ヒント：アプリではなく`manifest.yml`を修正することで完了します。
