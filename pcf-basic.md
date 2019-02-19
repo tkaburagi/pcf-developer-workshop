@@ -170,7 +170,9 @@ api-tkaburagi   started           1/1         1G       1G     api-tkaburagi.apps
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
-## Advanced
+## Advanced 1 
+時間のある方は `cf v3-zdt-push`を利用してワンコマンドでBGデプロイを実現できます。マニュアルは[こちら](https://docs.cloudfoundry.org/devguide/deploy-apps/zero-downtime.html)です。
+
 時間のある方は`Java Buildpack`のBlue Greenアップグレードに挑戦してみてください。Java Buildpacksのリリースは[こちら](https://github.com/cloudfoundry/java-buildpack/releases)です。
 
 ヒント：アプリではなく`manifest.yml`を修正することで完了します。
