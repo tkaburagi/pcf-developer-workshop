@@ -366,3 +366,137 @@ $ curl api-tkaburagi.apps.pcf.pcflab.jp/allbooks | jq
 ```
 
 **ここまで完了したら進捗シートにチェックをしてください。**
+
+## CredHub Service Brokerを利用する
+先ほどまでは`cf bind-service`を利用し、credenatialsを直接アプリケーションの環境変数にセットしていました。この状態だと`cf env`で全ての情報が見れてしまいます。ここではよりセキュアに情報を格納するためにcredHubを利用します。
+まずアプリケーションのデータベースをunbindし最初の状態戻します。Auto configurationができず`cf restart`は失敗するはずです。
+```console
+$ cf unbind-service api-tkaburagi mysql
+$ cf restart api-tkaburagi
+Restarting app api-tkaburagi in org handson-student-15 / space development as student-15...
+
+Stopping app...
+
+Waiting for app to start...
+load: 3.42  cmd: cf 35438 running 35.31u 0.32s
+Start unsuccessful
+
+TIP: use 'cf logs api-tkaburagi --recent' for more information
+```
+
+bindせずにサービスキーを取得するには`cf create-service`を利用します。
+```console
+$ cf create-service-key mysql mysql-key
+$ cf service-key mysql mysql-key                                                                                                   
+Getting key mysql-key for service instance mysql as student-15...
+
+{
+ "hostname": "q-n3s3y1.q-g3124.bosh",
+ "jdbcUrl": "jdbc:mysql://q-n3s3y1.q-g3124.bosh:3306/service_instance_db?user=72cd565074d142619fedd40a6d685e16\u0026password=i36h6gfiyinypucs\u0026useSSL=false",
+ "name": "service_instance_db",
+ "password": "i36h6gfiyinypucs",
+ "port": 3306,
+ "uri": "mysql://72cd565074d142619fedd40a6d685e16:i36h6gfiyinypucs@q-n3s3y1.q-g3124.bosh:3306/service_instance_db?reconnect=true",
+ "username": "72cd565074d142619fedd40a6d685e16"
+}
+```
+このキーを使ってCredHubインスタンスを作っていきます。
+
+`cf create-serivce`を利用してMySQLのcredenatilasを格納するCredHubのインスタンスを作成します。`jdbcUrl`に`mysql`というプロトコルのURIをもつインスタンスを作成しするとSpring Cloud ConnectorによりData Sourceのオブジェクトが生成されいます。
+
+```shell
+cf create-service credhub default mysql-cred  -c '{"jdbcUrl":"jdbc:mysql://q-n3s3y1.q-g3124.bosh:3306/service_instance_db?user=72cd565074d142619fedd40a6d685e16\u0026password=i36h6gfiyinypucs\u0026useSSL=false"}'
+```
+
+```console
+$ cf bind-service api-tkaburagi mysql-cred
+$ cf env api-tkaburagi
+System-Provided:
+{
+ "VCAP_SERVICES": {
+  "credhub": [
+   {
+    "binding_name": null,
+    "credentials": {
+     "credhub-ref": "/credhub-service-broker/credhub/858b630b-7e59-4563-8dbe-b9a9e899911f/credentials"
+    },
+    "instance_name": "mysql-cred",
+    "label": "credhub",
+    "name": "mysql-cred",
+    "plan": "default",
+    "provider": null,
+    "syslog_drain_url": null,
+    "tags": [
+     "credhub"
+    ],
+    "volume_mounts": []
+   }
+  ],
+## 省略
+```
+
+`cf env`の出力を見るとCredHubへの参照のみがセットされ、MySQLのcredentialsは表示されません。アプリ起動時にCredHubからcredenatialsを取得します。
+
+```console
+$ cf start api-tkaburagi
+Restarting app api-tkaburagi in org handson-student-15 / space development as student-15...
+
+Stopping app...
+
+Waiting for app to start...
+
+name:              api-tkaburagi
+requested state:   started
+instances:         1/1
+usage:             1G x 1 instances
+routes:            api-tkaburagi.apps.internal, api-tkaburagi.apps.pcf.pcflab.jp
+last uploaded:     Wed 20 Feb 00:54:34 JST 2019
+stack:             cflinuxfs3
+buildpack:         java_buildpack_offline
+start command:     JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR -Djava.ext.dirs=
+                   -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" &&
+                   CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=35927 -poolType=metaspace
+                   -stackThreads=250 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval
+                   exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher
+
+     state     since                  cpu      memory         disk           details
+#0   running   2019-02-19T16:02:00Z   211.2%   284.5M of 1G   222.6M of 1G
+
+$ curl api-tkaburagi.apps.pcf.pcflab.jp/allbooks | jq
+[
+  {
+    "id": "1",
+    "title": "What's Pivotal",
+    "author_name": "Rob Mee",
+    "price": "1500"
+  },
+  {
+    "id": "2",
+    "title": "eXtream Programming",
+    "author_name": "Kent Beck",
+    "price": "1200"
+  },
+  {
+    "id": "3",
+    "title": "Site Reliability Engineering",
+    "author_name": "Google",
+    "price": "5600"
+  },
+  {
+    "id": "4",
+    "title": "Introduction of Concourse CI",
+    "author_name": "Pivotal CI Team",
+    "price": "4900"
+  },
+  {
+    "id": "5",
+    "title": "Pivotal Cloud Foundry Deep Dive",
+    "author_name": "Pivotal Japan",
+    "price": "8900"
+  }
+]
+```
+
+アプリが正常に起動し、Databaseの情報が表示されることを確認してください。
+
+**ここまで完了したら進捗シートにチェックをしてください。**
