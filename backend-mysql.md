@@ -404,6 +404,8 @@ Getting key mysql-key for service instance mysql as student-15...
 
 `cf create-serivce`を利用してMySQLのcredenatilasを格納するCredHubのインスタンスを作成します。`jdbcUrl`に`mysql`というプロトコルのURIをもつインスタンスを作成しするとSpring Cloud ConnectorによりData Sourceのオブジェクトが生成されいます。
 
+URI, Username, Passwordは上記で取得したご自身の値に書き換えてください。
+
 ```shell
 cf create-service credhub default mysql-cred  -c '{"jdbcUrl":"jdbc:mysql://q-n3s3y1.q-g3124.bosh:3306/service_instance_db?user=72cd565074d142619fedd40a6d685e16\u0026password=i36h6gfiyinypucs\u0026useSSL=false"}'
 ```
