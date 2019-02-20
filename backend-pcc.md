@@ -280,34 +280,10 @@ spring.data.gemfire.security.username=${vcap.services.pcc.credentials.users[0].u
 spring.data.gemfire.security.password=${vcap.services.pcc.credentials.users[0].password}
 ```
 
-環境変数にセットされている値はSpring Boot Actuatorの`/env`エンドポイントにアクセスすると取得できます。デフォルトではオフになっているのでオンにします。
+環境変数にセットされている値はSpring Boot Actuatorの`/env`エンドポイントにアクセスすると取得できます。デフォルトではオフになっているのでオンにし、アプリをビルドして`--no-start`でpushします。
 ```shell
 cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env
-cf restart api-tkaburagi
-```
-
-```console
-curl http://api-tkaburagi.apps.pcf.pcflab.jp/actuator/env | jq
-{
-  "activeProfiles": [
-    "cloud"
-  ],
-  "propertySources": [
-    {
-      "name": "server.ports",
-      "properties": {
-        "local.server.port": {
-          "value": 8080
-        }
-      }
-    },
-    {
-      "name": "cloudcache-configuration",
-      "properties": {
-        "spring.data.gemfire.management.http.port": {
-          "value": "-1"
-        },
-//省略
+./mvnw clean package -DskipTests=true && cf push --no-start
 ```
 
 **ここまで完了したら進捗シートにチェックをしてください。**
@@ -334,9 +310,9 @@ gfsh> list regions
 
 `select * from /book` 
 
-データがないためなにも出力されないことがわかります。次にアプリケーションをpushします。
+データがないためなにも出力されないことがわかります。次にアプリケーションをstartします。
 ```shell
-./mvnw clean package -DskipTests=true && cf push
+cf start api-tkaburagi
 ```
 
 ```console
