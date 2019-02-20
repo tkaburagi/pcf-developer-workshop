@@ -161,7 +161,7 @@ public class ApiController {
     private static Logger log = LoggerFactory.getLogger(ApiController.class);
 
     public ApiController(BookJpaRepository bookJpaRepository) {
-        this.bookJpaRepository = this.bookJpaRepository;
+        this.bookJpaRepository = bookJpaRepository;
     }
 
     @RequestMapping("/")
