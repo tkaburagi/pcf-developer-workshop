@@ -119,7 +119,7 @@ public class PccConfig {
 }
 ```
 
-`src/main/java/com/example/demo`に`repository/gem`パッケージを作成し、`BookGemfireRepository`を追加して下記のように編集します。
+`src/main/java/com/example/demo`に`repository/gem`パッケージを作成し、`BookGemFireRepository`を追加して下記のように編集します。
 ```java
 import com.example.demo.entity.BookGemFire;
 import org.springframework.data.gemfire.repository.GemfireRepository;
