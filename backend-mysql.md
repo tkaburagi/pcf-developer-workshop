@@ -160,7 +160,7 @@ public class ApiController {
     private final BookJpaRepository bookJpaRepository;
     private static Logger log = LoggerFactory.getLogger(ApiController.class);
 
-    public RestController(BookJpaRepository bookJpaRepository) {
+    public ApiController(BookJpaRepository bookJpaRepository) {
         this.bookJpaRepository = this.bookJpaRepository;
     }
 
