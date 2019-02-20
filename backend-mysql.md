@@ -55,7 +55,7 @@ cf create-service p.mysql db-small mysql
 
 `src/main/java/com/example/apidemo`に`Entity`パッケージを作成し、新しいファイル`Book.java`を追加し下記のように編集します。
 ```java
-package com.example.apidemo;
+package com.example.apidemo.Entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
