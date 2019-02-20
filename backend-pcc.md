@@ -54,14 +54,14 @@ cf create-service p-cloudcache dev-plan pcc
 </dependency>
 ```
 
-`src/main/java/com/example/apidemo/entity`に`BookGemfire.java` を下記のように編集します。
+`src/main/java/com/example/apidemo/entity`に`BookGemFire.java` を下記のように編集します。
 
 ```java
 import org.springframework.data.annotation.Id;
 import org.springframework.data.gemfire.mapping.annotation.Region;
 
 @Region(name = "book")
-public class BookGemfire {
+public class BookGemFire {
     @Id
     private String id;
     private String title;
