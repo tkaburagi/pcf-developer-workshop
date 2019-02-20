@@ -125,3 +125,9 @@ hystrix_latency_total_seconds_sum{group="UiService",key="dummy",} 0.126
 時間のある方は`org_name`や`space_name`など色々なフィルタを試してみてください。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
+
+## Advanced
+時間のある方`PCF Metrics`を試してみましょう`https://metrics.sys.pcf.pcflab.jp`にアクセスします。
+tomcat_sessions_created_sessions_total 0.0て
+tomcat_sessions_created_sessions_total 0.0
+tomcat_sessions_created_sessions_total 0.0
