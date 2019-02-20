@@ -6,15 +6,12 @@ applications:
 - name: api-tkaburagi
   buildpack: java_buildpack_offline
   path: target/demo-0.0.1-SNAPSHOT.jar
-  memory: 1g
- routes:
- - route: api-tkaburagi.apps.internal
- - route: api-tkaburagi.apps.pcf.pcflab.jp
+  memory: 1g 
+  routes:
+    - route: api-tkaburagi.apps.internal
+    - route: api-tkaburagi.apps.pcf.pcflab.jp
   env:
     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
-  services:
-    - pcc
-    - mysql
 ```
 PCFでは`apps.internal`というコンテナ間で通信するための内部向けのドメインが付与されています。このドメインは外部からのリクエストは受け付けません。上のマニフェストでは`api-tkaburagi.apps.internal`というルート情報をマップしています。この内部ドメインは[BOSH DNS](https://bosh.io/docs/dns/)により[Service Discovery](https://www.cloudfoundry.org/blog/polyglot-service-discovery-container-networking-cloud-foundry/)されています。外からはアクセスできません。`cf push`します。
 
