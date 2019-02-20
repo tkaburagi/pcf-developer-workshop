@@ -111,8 +111,8 @@ import org.springframework.data.gemfire.config.annotation.EnableEntityDefinedReg
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
 
 @EnableGemfireCaching
-@EnableEntityDefinedRegions(basePackages = "com.example.demo.entity")
-@EnableGemfireRepositories(basePackages = "com.example.demo.repo.gem")
+@EnableEntityDefinedRegions(basePackages = "com.example.apidemo.entity")
+@EnableGemfireRepositories(basePackages = "com.example.apidemo.repository.gem")
 @Profile("cloud")
 @Configuration
 public class PccConfig {
