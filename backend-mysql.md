@@ -128,7 +128,7 @@ import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.example.demo.repo.jpa")
+@EnableJpaRepositories(basePackages = "com.example.demo.repository.jpa")
 @Profile("cloud")
 public class DbCloudConfig extends AbstractCloudConfig {
 
