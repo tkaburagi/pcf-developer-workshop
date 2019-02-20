@@ -54,7 +54,7 @@ cf create-service p-cloudcache dev-plan pcc
 </dependency>
 ```
 
-`src/main/java/com/example/demo/entity`に`BookGemfire.java` を下記のように編集します。
+`src/main/java/com/example/apidemo/entity`に`BookGemfire.java` を下記のように編集します。
 
 ```java
 import org.springframework.data.annotation.Id;
@@ -102,7 +102,7 @@ public class BookGemfire {
 }
 ```
 
-`src/main/java/com/example/demo`の`Config`パッケージ内に`PccConfig.java`を追加し、下記のように編集します。
+`src/main/java/com/example/apidemo`の`Config`パッケージ内に`PccConfig.java`を追加し、下記のように編集します。
 ```java
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -111,7 +111,7 @@ import org.springframework.data.gemfire.config.annotation.EnableEntityDefinedReg
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
 
 @EnableGemfireCaching
-@EnableEntityDefinedRegions(basePackages = "com.example.apidemo.entity")
+@EnableEntityDefinedRegions(basePackages = "com.example.apidemo.Entity")
 @EnableGemfireRepositories(basePackages = "com.example.apidemo.repository.gem")
 @Profile("cloud")
 @Configuration
