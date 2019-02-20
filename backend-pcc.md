@@ -34,7 +34,7 @@ cf create-service p-cloudcache dev-plan pcc
 
 
 ## アプリケーションの修正
-`pom.xml`に以下のエントリを追加します。`pring-boot-starter-web`は`<exclusions> ~ </exclusions>`を追記してください。
+`pom.xml`に以下のエントリを追加します。`spring-boot-starter-web`は`<exclusions> ~ </exclusions>`を追記してください。
 ```xml
 <dependency>
    <groupId>org.springframework.boot</groupId>
