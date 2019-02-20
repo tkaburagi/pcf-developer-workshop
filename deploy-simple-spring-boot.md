@@ -78,7 +78,7 @@
 ```
 
 ## アプリケーションの編集
-`src/main/java/com/example/demo`に`Controller`パッケージを作りその下に新しいファイル`ApiController.java`を追加し下記のように編集します。
+`src/main/java/com/example/apidemo`に`Controller`パッケージを作りその下に新しいファイル`ApiController.java`を追加し下記のように編集します。
 import文がわからない場合は完成版を参照してください。
 
 ```java
@@ -124,7 +124,7 @@ curl localhost:8080/ | jq
 ## PCFにアプリケーションをpushする
 次に`cf push`を使ってアプリケーションをPCF上にデプロイします。`cf target`でログインが出来ていることを確認してください。
 ```shell
-cf push api-<STUDENT_ID> -p target/demo-0.0.1-SNAPSHOT.jar
+cf push api-<STUDENT_ID> -p target/apidemo-0.0.1-SNAPSHOT.jar
 ```
 
 `tkaburagi`の部分は自身のSTUDENT_IDに置き換えてください。同じレスポンスがサーバから返ってくるでしょう。
@@ -219,7 +219,7 @@ cf apps
 applications:
 - name: api-tkaburagi
   buildpack: java_buildpack_offline
-  path: target/demo-0.0.1-SNAPSHOT.jar
+  path: target/apidemo-0.0.1-SNAPSHOT.jar
   memory: 1g
   env:
     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
