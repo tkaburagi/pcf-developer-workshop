@@ -59,9 +59,9 @@ applications:
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>uidemo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo-ui</name>
+    <name>uidemo</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -143,8 +143,10 @@ applications:
 api.url=http://api-tkaburagi.apps.internal:8080
 ```
 
-`com.example.demo`の直下に`Book.java`を追加し、下記のように編集します。
+`com.example.uidemo`の直下に`Book.java`を追加し、下記のように編集します。
 ```java
+package com.example.uidemo
+
 import java.io.Serializable;
 
 public class Book implements Serializable {
@@ -196,9 +198,9 @@ public class Book implements Serializable {
 }
 ```
 
-`com.example.demo`の直下に`AppInfo.java`を追加し、下記のように編集します。
+`com.example.uidemo`の直下に`AppInfo.java`を追加し、下記のように編集します。
 ```java
-package com.example.demo;
+package com.example.uidemo;
 
 import java.io.Serializable;
 
@@ -243,9 +245,9 @@ public class AppInfo implements Serializable {
 
 ```
 
-`com.example.demo`の直下に`UiService.java`を追加し、下記のように編集します。
+`com.example.uidemo`の直下に`UiService.java`を追加し、下記のように編集します。
 ```java
-package com.example.demo;
+package com.example.uidemo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -291,7 +293,7 @@ public class UiService {
 
 ```
 
-`com.example.demo`の直下に`UiController.java`を追加し、下記のように編集します。
+`com.example.uidemo`の直下に`UiController.java`を追加し、下記のように編集します。
 ```java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -395,12 +397,13 @@ public class UiController {
 
 アプリケーションをビルドし、PCFにpushしてみましょう。
 ```shell
-./mvnw package -Dmaven.test.skip=true && cf push
+./mvnw package -Dmaven.test.skip=true
+cf push
 ```
 
-Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。エラーが返ってくるはずです。
+Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。エラーが返ってくるはずです。なぜでしょうか？
 
-`apps.internal`のドメインのエンドポイントはデフォルトでは全てのポートへのアクセスが遮断されています。`cf add-network-policy`でネットワークポリシーを定義し、アクセスルートを開きます。
+APIがリスンする`apps.internal`のドメインのエンドポイントはデフォルトでは全てのポートへのアクセスが遮断されています。`cf add-network-policy`でネットワークポリシーを定義し、アクセスルートを開きます。
 
 使い方は` cf add-network-policy SOURCE_APP --destination-app DESTINATION_APP [(--protocol (tcp | udp) --port RANGE)]`です。
 
