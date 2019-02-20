@@ -304,7 +304,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UiController {
 
     private final UiService uiService;
-
+    private static Logger log = LoggerFactory.getLogger(ApiController.class);
+    
     public UiController(UiService uiService) {
         this.uiService = uiService;
     }
