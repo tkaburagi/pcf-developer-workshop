@@ -70,9 +70,7 @@ Apps Managerを開き、`api-tkaburagi`の画面に移動し、Autoscalingをオ
 `SCALING RULES`の`EDIT`を選択し`ADD RULE`で`CPU Utilization`を選びます。
 ![image](https://storage.googleapis.com/pcf-workshop/autoscale3.png)
 
-設定が完了したら`SAVE`を押します。
-
-![image](https://storage.googleapis.com/pcf-workshop/autoscale4.png)
+設定が完了したら`Apply Changes`を押します。
 
 30秒に一度CPU利用率がチェックされ、閾値を下回るとインスタンスが一つずつ減っていくのでその様子を下記のコマンドで確認します。
 
