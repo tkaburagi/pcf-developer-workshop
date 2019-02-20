@@ -102,7 +102,7 @@ public class BookGemfire {
 }
 ```
 
-`src/main/java/com/example/demo`の`Config`パッケージ内に`Config.java`を追加し、下記のように編集します。
+`src/main/java/com/example/demo`の`Config`パッケージ内に`PccConfig.java`を追加し、下記のように編集します。
 ```java
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -123,6 +123,7 @@ public class PccConfig {
 ```java
 import com.example.demo.entity.BookGemFire;
 import org.springframework.data.gemfire.repository.GemfireRepository;
+import org.springframework.data.gemfire.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
