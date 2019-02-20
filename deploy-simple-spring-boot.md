@@ -122,6 +122,24 @@ curl localhost:8080/ | jq
 ```
 
 ## PCFにアプリケーションをpushする
+プロジェクトディレクトリ直下に`manifest.yml`を追加して以下のように編集します。
+`- name:`をapi-<STUDENT_ID>になるよう書き換えてください。
+```yaml
+applications:
+- name: api-tkaburagi
+  buildpack: java_buildpack_offline
+  path: target/apidemo-0.0.1-SNAPSHOT.jar
+  memory: 1g
+  env:
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
+```
+manifestを使ってデプロイします。ここではアプリケーション名、ビルドパック、アプリのパスや利用するJREのバージョンなどを指定しています。ドキュメントは[こちら](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html)です
+
+```shell
+cf push
+```
+
+このマニフェストをカレントディレクトリに置き`cf push`するとディレクトリ直下のmanifestを読み込み、アプリがデプロイされます。また、`cf push -f path/tomanifest.yml`のような形でマニフェストを指定することもできます。
 次に`cf push`を使ってアプリケーションをPCF上にデプロイします。`cf target`でログインが出来ていることを確認してください。
 ```shell
 cf push api-<STUDENT_ID> -p target/apidemo-0.0.1-SNAPSHOT.jar
@@ -204,33 +222,6 @@ cf app api-tkaburagi
 ```
 
 `cf -h`を実行するとヘルプを表示できますので、時間のある方は色々なコマンドを試してみてください。
-
-### マニフェストを使ったデプロイ
-以下を実行し、一度アプリを削除します。
-```shell
-cf delete api-tkaburagi
-cf apps
-```
-`cf apps`を実行するとアプリが削除されていることがわかるでしょう。
-
-次に、プロジェクトディレクトリ直下に`manifest.yml`を追加して以下のように編集します。
-`- name:`をapi-<STUDENT_ID>になるよう書き換えてください。
-```yaml
-applications:
-- name: api-tkaburagi
-  buildpack: java_buildpack_offline
-  path: target/apidemo-0.0.1-SNAPSHOT.jar
-  memory: 1g
-  env:
-    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.0.+}}'
-```
-
-先ほどは`cf push`のオプションを使ってアプリをデプロイしましたが、manifestを使ってデプロイします。ここではアプリケーション名、ビルドパック、アプリのパスや利用するJREのバージョンなどを指定しています。ドキュメントは[こちら](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html)です
-
-```shell
-cf push
-```
-このマニフェストをカレントディレクトリに置き`cf push`するとディレクトリ直下のmanifestを読み込み、アプリがデプロイされます。また、`cf push -f path/tomanifest.yml`のような形でマニフェストを指定することもできます。
 
 **ここまで完了したら進捗シートにチェックをしてください。**
 
