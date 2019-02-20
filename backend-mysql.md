@@ -53,9 +53,9 @@ cf create-service p.mysql db-small mysql
 </dependency>
 ```
 
-`src/main/java/com/example/demo`に`Entity`パッケージを作成し、新しいファイル`Book.java`を追加し下記のように編集します。
+`src/main/java/com/example/apidemo`に`Entity`パッケージを作成し、新しいファイル`Book.java`を追加し下記のように編集します。
 ```java
-package com.example.demo;
+package com.example.apidemo;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -102,7 +102,7 @@ public class Book {
     }
 }
 ```
-`src/main/java/com/example/demo`に`repository/jpa`パッケージを作成し、新しいファイル`BookJpaRepository.java`を追加し下記のように編集します。
+`src/main/java/com/example/apidemo`に`repository/jpa`パッケージを作成し、新しいファイル`BookJpaRepository.java`を追加し下記のように編集します。
 ```java
 import com.example.demo.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -114,7 +114,7 @@ public interface BookJpaRepository extends JpaRepository<Book, String> {
 }
 ```
 
-`src/main/java/com/example/demo`に`Config`パッケージを作成し、新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
+`src/main/java/com/example/apidemo`に`Config`パッケージを作成し、新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
 ```java
 import javax.sql.DataSource;
 
