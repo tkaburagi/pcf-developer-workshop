@@ -78,7 +78,7 @@ import javax.servlet.http.HttpSession; //この行を追加
 //省略
 
 @RequestMapping(method = RequestMethod.GET, value = "/")
-public String home(String id, Model model, HttpSession session) throws Exception {
+public String home(String id, Model model, HttpSession session) throws Exception { //この行を変更
         log.info("Handling home");
         model.addAttribute("appinfo", uiService.getAppInfo());
         model.addAttribute("allbooks", uiService.getAllBooks());
