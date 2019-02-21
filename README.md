@@ -10,6 +10,7 @@
 * [Zipkinを導入する](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/zipkin.md)
 * [APMツールを利用する](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/apm.md)
 * [ConcourseでCIする](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/concourse.md)
+* [アンケート](https://docs.google.com/forms/d/e/1FAIpQLSf9KHCcjvbMiHyqCk1a012-hGSM0yZVlUcHsmrmrMMzv8d8iw/viewform?usp=sf_link)
 
 # アプリケーションイメージ
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/readme-1.png)
