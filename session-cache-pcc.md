@@ -58,6 +58,7 @@ create region --name=ClusteredSpringSessions --type=PARTITION_HEAP_LRU
 ```java
 import org.springframework.data.gemfire.config.annotation.ClientCacheApplication;
 import org.springframework.session.data.gemfire.config.annotation.web.http.EnableGemFireHttpSession;
+import org.springframework.data.gemfire.config.annotation.EnableSecurity;
 
 @EnableGemFireHttpSession(poolName = "DEFAULT")
 @ClientCacheApplication
@@ -69,6 +70,12 @@ public class PccConfig {
 
 `UiController.java`を以下のように編集します。
 ```java     
+//省略
+
+import javax.servlet.http.HttpSession; //この行を追加
+
+//省略
+
 @RequestMapping(method = RequestMethod.GET, value = "/")
 public String home(String id, Model model, HttpSession session) throws Exception {
         log.info("Handling home");
@@ -76,7 +83,7 @@ public String home(String id, Model model, HttpSession session) throws Exception
         model.addAttribute("allbooks", uiService.getAllBooks());
         model.addAttribute("searchedBook", uiService.getBookById(id));
         model.addAttribute("message", uiService.dummy());
-        session.setAttribute("iam", "I'm a Session");
+        session.setAttribute("iam", "I'm a Session"); //この行を追加
         return "ui/index";
 }
 ```
