@@ -90,6 +90,7 @@ public String home(String id, Model model, HttpSession session) throws Exception
 
 最後に`index.html`を以下のように編集します。
 ```html
+<!-- 省略 -->
     </tr>
     </thead>
     <th:block th:each="searchedBook : ${searchedBook}">
