@@ -14,6 +14,8 @@
 cf cups dynatrace-service -p "environmentid, apitoken, apiurl"
 cf bind-service api-tkaburagi dynatrace-service
 cf bind-service ui-tkaburagi dynatrace-service
+cf restage ui-tkaburagi
+cf restage api-tkaburagi
 ```
 
 `environmentid`, `apitoken`, `apiurl`には先ほどメモした内容を入力します。`apiurl`は`https://<envid>.live.dynatrace.com/api`のような形になります。
