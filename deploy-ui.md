@@ -37,7 +37,7 @@ manifest.ymlを追加します。`name`の`tkaburagi`の部分は自分のIDに�
 applications:
 - name: ui-tkaburagi
   buildpack: java_buildpack_offline
-  path: target/demo-0.0.1-SNAPSHOT.jar
+  path: target/uidemo-0.0.1-SNAPSHOT.jar
   memory: 1g
   env:
     JBP_CONFIG_OPEN_JDK_JRE: '{  jre: { version: 11.0.+}}'
@@ -304,7 +304,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UiController {
 
     private final UiService uiService;
-    private static Logger log = LoggerFactory.getLogger(ApiController.class);
+    private static Logger log = LoggerFactory.getLogger(UiController.class);
     
     public UiController(UiService uiService) {
         this.uiService = uiService;
