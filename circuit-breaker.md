@@ -67,7 +67,6 @@ public class UiController {
         model.addAttribute("allbooks", this.uiService.getAllBooks());
         model.addAttribute("searchedBook", this.uiService.getBookById(id));
         model.addAttribute("message", this.uiService.dummy());
-        session.setAttribute("iam", "I'm a Session");
         return "ui/index";
     }
 }
