@@ -130,6 +130,7 @@ hystrix_latency_total_seconds_sum{group="UiService",key="dummy",} 0.126
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 ## Advanced
-時間のある方`PCF Metrics`と`Apps Manager`を試してみましょう。
-PCF Metrics: `https://metrics.sys.pcf.pcflab.jp`
-Apps Manager: `https://apps.sys.pcf.pcflab.jp`
+時間のある方`ui-tkaburagi`のモニタリングを`PCF Metrics`と`Apps Manager`を使って試してみましょう。
+
+* PCF Metrics: `https://metrics.sys.pcf.pcflab.jp`
+* Apps Manager: `https://apps.sys.pcf.pcflab.jp`
