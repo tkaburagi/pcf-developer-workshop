@@ -83,7 +83,7 @@ $ ./mvnw clean package -DskipTests=true
 $ cf push
 $ curl https://ui-tkaburagi.apps.pcf.pcflab.jp/actuator/hystrix.stream --insecure
 ```
-`curl`コマンドのターミナルはそのままにしておいてください。一度Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスし、上の`curl`の出力を確認しましょう。Actuatorの`hystrix.stream`エンドポイントでCircuit Breakerの状態がストリーミングされます。次に以下のコマンドを実行してください。HystrixのメトリクスがMicrometerのにbindする設定が`AutoConfigured`され、`prometheus`エンドポイントからメトリクスを確認できます。
+`curl`コマンドのターミナルはそのままにしておいてください。一度Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスし、上の`curl`の出力を確認しましょう。Actuatorの`hystrix.stream`エンドポイントでCircuit Breakerの状態がストリーミングされます。次に以下のコマンドを実行してください。HystrixのメトリクスをMicrometerにバインドする設定が`AutoConfigured`され、`prometheus`エンドポイントからメトリクスを確認できます。
 ```console
 $ curl ui-tkaburagi.apps.pcf.pcflab.jp/actuator/prometheus
 # ...
