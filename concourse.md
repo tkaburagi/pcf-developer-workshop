@@ -75,7 +75,6 @@ jobs:
           cd api-<studentID>
           rm -rf ~/.m2
           ln -fs $(pwd)/m2 ~/.m2
-          mvn test
 ```
 
 `fly`コマンドでConcourseのパイプラインを更新します。
@@ -161,7 +160,6 @@ jobs:
           cd api-<studentID>
           rm -rf ~/.m2
           ln -fs $(pwd)/m2 ~/.m2
-          mvn test
 - name: build-and-deploy
   plan:
   - get: api-<studentID>
@@ -187,7 +185,7 @@ jobs:
           cd api-<studentID>
           rm -rf ~/.m2
           ln -fs $(pwd)/m2 ~/.m2
-          mvn clean package
+          mvn clean package -DskipTests=true
   - put: deploy-to-cf
     params: 
       manifest: api-<studentID>/manifest.yml
