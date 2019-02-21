@@ -75,6 +75,8 @@ JVM関連のメトリクスを選んでグラフに表示されることを確�
 次に`application.properties`に以下を追加します。
 ```properties
 management.endpoints.web.exposure.include=*
+management.cloudfoundry.skip-ssl-validation=true
+management.cloudfoundry.enabled=true
 ```
 
 アプリケーションをpushします。
@@ -128,7 +130,6 @@ hystrix_latency_total_seconds_sum{group="UiService",key="dummy",} 0.126
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 ## Advanced
-時間のある方`PCF Metrics`を試してみましょう`https://metrics.sys.pcf.pcflab.jp`にアクセスします。
-tomcat_sessions_created_sessions_total 0.0て
-tomcat_sessions_created_sessions_total 0.0
-tomcat_sessions_created_sessions_total 0.0
+時間のある方`PCF Metrics`と`Apps Manager`を試してみましょう。
+PCF Metrics: `https://metrics.sys.pcf.pcflab.jp`
+Apps Manager: `https://apps.sys.pcf.pcflab.jp`
