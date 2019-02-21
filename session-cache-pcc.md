@@ -124,7 +124,8 @@ spring.data.gemfire.security.password=${vcap.services.pcc.credentials.users[0].p
 
 アプリケーションをデプロイしましょう。
 ```shell
-./mvnw clean package -DskipTests=true && cf push
+$ ./mvnw clean package -DskipTests=true
+$ cf push
 ```
 
 **ここまで完了したら進捗シートにチェックをしてください。**
