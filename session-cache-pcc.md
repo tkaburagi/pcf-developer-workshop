@@ -41,7 +41,8 @@ create region --name=ClusteredSpringSessions --type=PARTITION_HEAP_LRU
 
 これでPCC側の準備は完了です。
 
-## アプリの修正
+## UI Demoアプリの修正
+** UI側のアプリの修正になりますのでご注意ください。**
 `pom.xml`に以下の依存ライブラリ情報を追加してください。
 ```xml
 <dependency>
