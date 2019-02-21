@@ -16,7 +16,9 @@ spring.sleuth.sampler.probability=1.0
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-zipkin</artifactId>
+    <version>2.1.0.RELEASE</version>
 </dependency>
+
 ```
 
 ```shell
