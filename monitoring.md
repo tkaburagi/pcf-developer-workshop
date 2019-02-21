@@ -2,7 +2,7 @@
 
 [Micrometer](https://micrometer.io/)はベンダーニュートラルなメトリクス収集のためのエンドポイントを提供するツールです。MicrometerはPivotalが開発しています。Prometheus, Datadogなど様々なライブラリがMicrometerに対応しています。今回はPrometheusを利用します。
 
-まず、`pom.xml`に以下の依存ライブラリ情報を追加します。
+まず、`api-tkaburagi`のアプリの`pom.xml`に以下の依存ライブラリ情報を追加します。
 ```xml
 <dependency>
     <groupId>io.micrometer</groupId>
@@ -79,8 +79,9 @@ management.endpoints.web.exposure.include=*
 
 アプリケーションをpushします。
 ```shell
-./mvnw clean package -DskipTests=true && cf push
-curl https://ui-tkaburagi.apps.pcf.pcflab.jp/actuator/hystrix.stream --insecure
+$ ./mvnw clean package -DskipTests=true
+$ cf push
+$ curl https://ui-tkaburagi.apps.pcf.pcflab.jp/actuator/hystrix.stream --insecure
 ```
 `curl`コマンドのターミナルはそのままにしておいてください。一度Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスし、上の`curl`の出力を確認しましょう。Actuatorの`hystrix.stream`エンドポイントでCircuit Breakerの状態がストリーミングされます。次に以下のコマンドを実行してください。HystrixのメトリクスがMicrometerのにbindする設定が`AutoConfigured`され、`prometheus`エンドポイントからメトリクスを確認できます。
 ```console
