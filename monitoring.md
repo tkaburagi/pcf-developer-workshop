@@ -21,7 +21,7 @@ cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env,
 ```
 
 ```console
-$ curl https://api-tkaburagi.apps.pcfone.io/actuator/prometheus
+$ curl http://api-tkaburagi.apps.pcf.pcflab.jp/actuator/prometheus
 
 Counting objects: 3, done.
 Delta compression using up to 4 threads.
