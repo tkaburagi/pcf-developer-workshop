@@ -10,11 +10,6 @@
 </dependency>
 ```
 
-次に`cf set-env`でアプリに環境変数をセットしエンドポイントを有効にします。
-```shell
-cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env,prometheus
-```
-
 設定はこれだけです。アプリケーションをpushし、エンドポイントにアクセスをしてみます。
 ```shell
 ./mvnw clean package -DskipTests=true && cf push
@@ -70,13 +65,6 @@ JVM関連のメトリクスを選んでグラフに表示されることを確�
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-registry-prometheus</artifactId>
 </dependency>
-```
-
-次に`application.properties`に以下を追加します。
-```properties
-management.endpoints.web.exposure.include=*
-management.cloudfoundry.skip-ssl-validation=true
-management.cloudfoundry.enabled=true
 ```
 
 アプリケーションをpushします。

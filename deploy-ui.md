@@ -43,6 +43,12 @@ applications:
     JBP_CONFIG_OPEN_JDK_JRE: '{  jre: { version: 11.0.+}}'
 ```
 
+`appications.properties`を下記のように編集します。
+```properties
+management.endpoints.web.exposure.include=*
+management.cloudfoundry.skip-ssl-validation=true
+```
+
 `pom.xml`を編集します。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

@@ -255,11 +255,8 @@ spring.data.gemfire.pool.DEFAULT.locators=${vcap.services.pcc.credentials.locato
 spring.data.gemfire.security.username=${vcap.services.pcc.credentials.users[0].username}
 spring.data.gemfire.security.password=${vcap.services.pcc.credentials.users[0].password}
 ```
-
-環境変数にセットされている値はSpring Boot Actuatorの`/env`エンドポイントにアクセスすると取得できます。デフォルトではオフになっているのでオンにし、アプリをビルドして`--no-start`でpushします。
 //TODO
 ```shell
-$ cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env
 $ ./mvnw clean package -DskipTests=true
 $ cf push --no-start
 ```
