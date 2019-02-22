@@ -78,7 +78,7 @@
 ```
 
 ## アプリケーションの編集
-`src/main/java/com/example/apidemo`に`Controller`パッケージを作りその下に新しいファイル`ApiController.java`を追加し下記のように編集します。
+`src/main/java/com/example/apidemo`に`controller`パッケージを作りその下に新しいファイル`ApiController.java`を追加し下記のように編集します。
 import文がわからない場合は完成版を参照してください。
 
 ```java

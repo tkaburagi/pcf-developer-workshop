@@ -103,10 +103,10 @@ public class BookGemFire {
 }
 ```
 
-`src/main/java/com/example/apidemo`の`Config`パッケージ内に`PccConfig.java`を追加し、下記のように編集します。
+`src/main/java/com/example/apidemo`の`config`パッケージ内に`PccConfig.java`を追加し、下記のように編集します。
 ```java
 @EnableGemfireCaching
-@EnableEntityDefinedRegions(basePackages = "com.example.apidemo.Entity")
+@EnableEntityDefinedRegions(basePackages = "com.example.apidemo.entity")
 @EnableGemfireRepositories(basePackages = "com.example.apidemo.repository.gem")
 @Profile("cloud")
 @Configuration
@@ -114,10 +114,10 @@ public class PccConfig {
 }
 ```
 
-`src/main/java/com/example/apidemo`に`repository/gem`パッケージを作成し、`BookGemFireRepository`を追加して下記のように編集します。
+`src/main/java/com/example/apidemo`に`repository/gem`パッケージを作成し、`BookGemfireRepository`を追加して下記のように編集します。
 ```java
 @Repository
-public interface BookGemFireRepository extends GemfireRepository<BookGemFire, String> {
+public interface BookGemfireRepository extends GemfireRepository<BookGemFire, String> {
 
     @Query("SELECT * FROM /book b WHERE b.id = $1")
     BookGemFire findBookById(String id);

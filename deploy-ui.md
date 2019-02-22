@@ -5,7 +5,7 @@
 applications:
 - name: api-tkaburagi
   buildpack: java_buildpack_offline
-  path: target/demo-0.0.1-SNAPSHOT.jar
+  path: target/apidemo-0.0.1-SNAPSHOT.jar
   memory: 1g 
   routes:
     - route: api-tkaburagi.apps.internal
@@ -142,10 +142,6 @@ api.url=http://api-tkaburagi.apps.internal:8080
 
 `com.example.uidemo`の直下に`Book.java`を追加し、下記のように編集します。
 ```java
-package com.example.uidemo
-
-import java.io.Serializable;
-
 public class Book implements Serializable {
     private String id;
     private String title;
@@ -197,10 +193,6 @@ public class Book implements Serializable {
 
 `com.example.uidemo`の直下に`AppInfo.java`を追加し、下記のように編集します。
 ```java
-package com.example.uidemo;
-
-import java.io.Serializable;
-
 public class AppInfo implements Serializable {
     private String message;
     private String index;
@@ -244,17 +236,6 @@ public class AppInfo implements Serializable {
 
 `com.example.uidemo`の直下に`UiService.java`を追加し、下記のように編集します。
 ```java
-package com.example.uidemo;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-
 @Service
 public class UiService {
 
@@ -293,14 +274,6 @@ public class UiService {
 
 `com.example.uidemo`の直下に`UiController.java`を追加し、下記のように編集します。
 ```java
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 @Controller
 public class UiController {
 
@@ -396,8 +369,8 @@ public class UiController {
 
 アプリケーションをビルドし、PCFにpushしてみましょう。
 ```shell
-./mvnw package -Dmaven.test.skip=true
-cf push
+$ ./mvnw package -Dmaven.test.skip=true
+$ cf push
 ```
 
 Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。エラーが返ってくるはずです。なぜでしょうか？
@@ -409,7 +382,7 @@ APIがリスンする`apps.internal`のドメインのエンドポイントは�
 今回は`SOURCE_APP`は`ui-tkaburagi`、`DESTINATION_APP`は`api-tkaburagi`、`--protocol`はtcp、`--port`は`8080`です。
 
 ```shell
-cf add-network-policy ui-tkaburagi --destination-app api-tkaburagi  --protocol tcp --port 8080
+$ cf add-network-policy ui-tkaburagi --destination-app api-tkaburagi  --protocol tcp --port 8080
 ```
 
 再度`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。

@@ -105,7 +105,7 @@ public interface BookJpaRepository extends JpaRepository<Book, String> {
 }
 ```
 
-`src/main/java/com/example/apidemo`に`Config`パッケージを作成し、新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
+`src/main/java/com/example/apidemo`に`config`パッケージを作成し、新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
 ```java
 @Configuration
 @EnableJpaRepositories(basePackages = "com.example.apidemo.repository.jpa")
