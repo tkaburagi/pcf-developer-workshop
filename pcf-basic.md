@@ -10,33 +10,33 @@ PCFのオートヒーリングには3つのレイヤがあります。コンテ�
 
 #### ターミナル1
 ```shell
-watch -n 1 'curl http://api-tkaburagi.apps.pcf.pcflab.jp | jq'
+$ watch -n 1 'curl http://api-tkaburagi.apps.pcf.pcflab.jp | jq'
 ```
 watchがない場合、`while true;do curl -s https://api-tkaburagi.apps.pcf.pcflab.jp/;echo;sleep 1;done`でも大丈夫です。
 このターミナルではアプリケーションのインデックス数やリクエストの負荷分散などの状況を見ます。
 
 #### ターミナル2
 ```shell
-watch -n 1 cf app api-tkaburagi
+$ watch -n 1 cf app api-tkaburagi
 ```
 watchがない場合は上記同様です。このターミナルではアプリケーションの状態を見ます。
 
 別のターミナルでアプリケーションをスケールアウトします。
 ```shell
-cf scale -i 5 api-tkaburagi
+$ cf scale -i 5 api-tkaburagi
 ```
 ターミナル1で負荷分散をしていること、ターミナル2でアプリケーションが5インスタンス`running`になっていることを確認しましょう。
 
 次に以下の設定をアプリケーションに加え、Spring Bootのシャットダウンエンドポイントを有効にします。
 ```shell
-cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown
-cf set-env api-tkaburagi management.endpoint.shutdown.enabled true
-cf restart api-tkaburagi
+$ cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown
+$ cf set-env api-tkaburagi management.endpoint.shutdown.enabled true
+$ cf restart api-tkaburagi
 ```
 
 アプリが再起動し、0-4の5インスタンスにリクエストが振られていることを確認し、以下のコマンドを実行してください。このコマンドで5つのインスタンスのうち、一つが停止します。ターミナル1,2をよく見ながら何が起こっているかを確認して見てください。
 ```console
-curl -X POST https://api-tkaburagi.apps.pcf.pcflab.jp/actuator/shutdown --insecure
+$ curl -X POST https://api-tkaburagi.apps.pcf.pcflab.jp/actuator/shutdown --insecure
 {"message":"Shutting down, bye..."}
 ```
 残りのインスタンスからのみレスポンスがあることしばらくすると自動でアプリが復旧することが確認できるでしょう。見逃した場合は何度か実行して見てください。
@@ -75,7 +75,7 @@ Apps Managerを開き、`api-tkaburagi`の画面に移動し、Autoscalingをオ
 30秒に一度CPU利用率がチェックされ、閾値を下回るとインスタンスが一つずつ減っていくのでその様子を下記のコマンドで確認します。
 
 ```console
-cf app api-tkaburagi | grep "%"
+$ cf app api-tkaburagi | grep "%"
 #0   running   2018-04-24T07:07:36Z   0.3%   297.1M of 1G   138.1M of 1G
 ```
 
@@ -92,7 +92,7 @@ Cloud Foundryでは`cf map-route`、`umnap-route`コマンドによりルーテ�
 
 ここではwatchよりwhileでやったほうがわかりやすいので、ターミナル1をwatchで開いている方は一旦止めて以下のコマンドでレスポンスを監視します。
 ```shell
-while true; do curl -s http://api-tkaburagi.apps.pcf.pcflab.jp; echo; sleep 1;done
+$ while true; do curl -s http://api-tkaburagi.apps.pcf.pcflab.jp; echo; sleep 1;done
 ```
 
 ### アプリケーションの修正
@@ -103,13 +103,14 @@ body.put("message","Helloworld V2");
 
 アプリを変更したらmanifest.ymlのあるディレクトリにいることを確認して、アプリをデプロイします。
 ```shell
-./mvnw package -Dmaven.test.skip=true && cf push api-tkaburagi-green # manifest内のapplication nameをoverride
+$ ./mvnw package -Dmaven.test.skip=true
+$ cf push api-tkaburagi-green # manifest内のapplication nameをoverride
 ```
 
 新バージョンにアクセスして、正常に動作していることを確認してください。
 
 ```shell
-curl -s http://api-tkaburagi-green.apps.pcf.pcflab.jp
+$ curl -s http://api-tkaburagi-green.apps.pcf.pcflab.jp
 ```
 
 ### アプリケーションをバージョンアップする
