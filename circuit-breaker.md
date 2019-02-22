@@ -133,7 +133,8 @@ public class DemoUiApplication{
 
 `@EnableCircuitBreaker`を付与することでCiucuit Breakerのコンフィグレーションが完了します。再度アプリをデプロイします。
 ```shell
-./mvnw package -Dmaven.test.skip=true && cf push
+$ ./mvnw package -Dmaven.test.skip=true
+$ cf push
 ```
 
 Webブラウザで`http://ui-tkaburagi.apps.pcf.pcflab.jp/?id=1`にアクセスしてみましょう。
