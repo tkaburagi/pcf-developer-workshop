@@ -255,7 +255,32 @@ spring.data.gemfire.pool.DEFAULT.locators=${vcap.services.pcc.credentials.locato
 spring.data.gemfire.security.username=${vcap.services.pcc.credentials.users[0].username}
 spring.data.gemfire.security.password=${vcap.services.pcc.credentials.users[0].password}
 ```
-//TODO
+
+`vcap.services.pcc...`の値は`cf bind-service`でアプリの環境変数にセットした値です。どの値を参照すべきかわからないときは、この値の参照はSpring Actuatorの`env`エンドポイントにアクセスすることで確認できます。
+```console
+curl https://api-tkaburagi.apps.pcf.pcflab.jp/actuator/env | jq 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 15948    0 15948    0     0  17799      0 --:--:-- --:--:-- --:--:-- 17799
+{
+  "activeProfiles": [
+    "cloud"
+  ],
+  "propertySources": [
+    {
+      "name": "server.ports",
+      "properties": {
+        "local.server.port": {
+          "value": 8080
+        }
+      }
+    },
+    {
+      "name": "cloudcache-configuration",
+#以下省略
+```
+
+サービス名の`pcc`で`grep`などをすると`properties`で参照すべき値がわかるでしょう。アプリをビルドしてpushします。
 ```shell
 $ ./mvnw clean package -DskipTests=true
 $ cf push --no-start

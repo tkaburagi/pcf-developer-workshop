@@ -18,6 +18,11 @@ $ fly --version
 4.2.2
 ```
 
+//TODO
+```console
+$ fly login
+```
+
 ## Gir Repositoryの作成
 [Github](https://github.com)にログインし、`Repositories` -> `New`と進みます。
 
