@@ -27,7 +27,7 @@ postgresql-10-odb             standalone, general                               
 ```
 
 ```shell
-cf create-service p-cloudcache dev-plan pcc
+$ cf create-service p-cloudcache dev-plan pcc
 ```
 
 作成にはしばらく時間がかかりますので、待っている間次に進んでください。
@@ -39,27 +39,28 @@ cf create-service p-cloudcache dev-plan pcc
 <dependency>
    <groupId>org.springframework.boot</groupId>
    <artifactId>spring-boot-starter-web</artifactId>
+   <!-- ここから -->
    <exclusions>
        <exclusion>
            <groupId>org.apache.logging.log4j</groupId>
            <artifactId>log4j-to-slf4j</artifactId>
        </exclusion>
    </exclusions>
+   <!-- ここから まで追加-->
 </dependency>
 <!-- 省略 -->
+<!-- ここから -->
 <dependency>
    <groupId>org.springframework.geode</groupId>
    <artifactId>spring-gemfire-starter</artifactId>
    <version>1.0.0.M3</version>
 </dependency>
+<!-- ここから まで追加-->
 ```
 
 `src/main/java/com/example/apidemo/entity`に`BookGemFire.java` を下記のように編集します。
 
 ```java
-import org.springframework.data.annotation.Id;
-import org.springframework.data.gemfire.mapping.annotation.Region;
-
 @Region(name = "book")
 public class BookGemFire {
     @Id
@@ -104,12 +105,6 @@ public class BookGemFire {
 
 `src/main/java/com/example/apidemo`の`Config`パッケージ内に`PccConfig.java`を追加し、下記のように編集します。
 ```java
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.gemfire.cache.config.EnableGemfireCaching;
-import org.springframework.data.gemfire.config.annotation.EnableEntityDefinedRegions;
-import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
-
 @EnableGemfireCaching
 @EnableEntityDefinedRegions(basePackages = "com.example.apidemo.Entity")
 @EnableGemfireRepositories(basePackages = "com.example.apidemo.repository.gem")
@@ -119,13 +114,8 @@ public class PccConfig {
 }
 ```
 
-`src/main/java/com/example/demo`に`repository/gem`パッケージを作成し、`BookGemFireRepository`を追加して下記のように編集します。
+`src/main/java/com/example/apidemo`に`repository/gem`パッケージを作成し、`BookGemFireRepository`を追加して下記のように編集します。
 ```java
-import com.example.demo.entity.BookGemFire;
-import org.springframework.data.gemfire.repository.GemfireRepository;
-import org.springframework.data.gemfire.repository.Query;
-import org.springframework.stereotype.Repository;
-
 @Repository
 public interface BookGemFireRepository extends GemfireRepository<BookGemFire, String> {
 
@@ -135,14 +125,8 @@ public interface BookGemFireRepository extends GemfireRepository<BookGemFire, St
 }
 ```
 
-`src/main/java/com/example/demo`に`service`パッケージを作成し、`BookService.java`を追加し、下記のように編集します。
+`src/main/java/com/example/apidemo`に`service`パッケージを作成し、`BookService.java`を追加し、下記のように編集します。
 ```java
-import com.example.demo.entity.Book;
-import com.example.demo.repo.jpa.BookJpaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-
 @Service
 public class BookService {
 
@@ -179,15 +163,6 @@ public class BookService {
 
 `ApiController.java`を下記のように編集します。
 ```java
-import com.example.demo.repo.jpa.BookJpaRepository;
-import com.example.demo.service.BookService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 public class ApiController {
 
@@ -242,7 +217,8 @@ public class ApiController {
 ```
 アプリをビルドしてpushします。
 ```shell
-./mvnw clean package -DskipTests=true && cf push --no-start
+$ ./mvnw clean package -DskipTests=true
+$ cf push --no-start
 ```
 
 次に、PCCインスタンスをアプリケーションにbindしていきます。まず先ほどのインスタンスが作成完了しているかを確認します。
@@ -267,8 +243,8 @@ Updated: 2019-02-09T07:09:26Z
 
 `Status`が`create succeeeded`になっていることを確認します。`provisioning`になっていたら完了するまで待ってください。完了したら`cf bind-service`でbindします。
 ```shell
-cf bind-service api-tkaburagi pcc
-cf env api-tkaburagi
+$ cf bind-service api-tkaburagi pcc
+$ cf env api-tkaburagi
 ```
 
 `cf env`で出力されるユーザ名の`cluster_operator_*************`とパスワードの`*************`とLocatorsの`IP[PORT]`の部分をコピペしてメモ帳に残してください。
@@ -281,9 +257,11 @@ spring.data.gemfire.security.password=${vcap.services.pcc.credentials.users[0].p
 ```
 
 環境変数にセットされている値はSpring Boot Actuatorの`/env`エンドポイントにアクセスすると取得できます。デフォルトではオフになっているのでオンにし、アプリをビルドして`--no-start`でpushします。
+//TODO
 ```shell
-cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env
-./mvnw clean package -DskipTests=true && cf push --no-start
+$ cf set-env api-tkaburagi management.endpoints.web.exposure.include shutdown,env
+$ ./mvnw clean package -DskipTests=true
+$ cf push --no-start
 ```
 
 **ここまで完了したら進捗シートにチェックをしてください。**
@@ -312,7 +290,7 @@ gfsh> list regions
 
 データがないためなにも出力されないことがわかります。次にアプリケーションをstartします。
 ```shell
-cf start api-tkaburagi
+$ cf start api-tkaburagi
 ```
 
 ```console
@@ -342,7 +320,7 @@ $ curl api-tkaburagi.apps.pcf.pcflab.jp//book?id=1 | jq
 ```
 キャッシュからデータが取得されていることがわかります。ローカルのメモリから取得していないことを確認するため、アプリケーションを再起動して、再度アクセスしてみます。
 ```shell
-cf restart
+$ cf restart
 ```
 キャッシュからデータが取得されていることを確認します。再起動してもデータは残っており、外部のメモリデータストアからデータを取得されていることがわかります。
 ```console

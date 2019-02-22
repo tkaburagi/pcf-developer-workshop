@@ -220,7 +220,8 @@ Updated: 2019-02-04T06:43:09Z
 
 アプリケーションをビルドして、アプリケーションをデプロイします。`--no-start`オプションをつけて、アプリケーションを起動せずにpushします。
 ```shell
-./mvnw clean package -DskipTests=true && cf push --no-start
+$ ./mvnw clean package -DskipTests=true
+$ cf push --no-start
 ```
 
 次に、`cf bind-service`でMySQLインスタンスの接続情報をアプリケーションの環境変数にバインドします。
