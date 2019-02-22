@@ -101,14 +101,20 @@ public class ApiController {
 }
 ```
 
+`appications.properties`を下記のように編集します。
+```properties
+management.endpoints.web.exposure.include=*
+management.cloudfoundry.skip-ssl-validation=true
+```
+
 作ったアプリをビルドし、ローカルで稼働させてみます。
 ```shell
-./mvnw package -Dmaven.test.skip=true
-java -jar target/demo-0.0.1-SNAPSHOT.jar
+$ ./mvnw package -Dmaven.test.skip=true
+$ java -jar target/demo-0.0.1-SNAPSHOT.jar
 ```
 
 ```shell
-curl localhost:8080/ | jq
+$ curl localhost:8080/ | jq
 ```
 
 以下のようなレスポンスが返って来れば成功です。
@@ -136,18 +142,18 @@ applications:
 manifestを使ってデプロイします。ここではアプリケーション名、ビルドパック、アプリのパスや利用するJREのバージョンなどを指定しています。ドキュメントは[こちら](https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html)です
 
 ```shell
-cf push
+$ cf push
 ```
 
 このマニフェストをカレントディレクトリに置き`cf push`するとディレクトリ直下のmanifestを読み込み、アプリがデプロイされます。また、`cf push -f path/tomanifest.yml`のような形でマニフェストを指定することもできます。
 次に`cf push`を使ってアプリケーションをPCF上にデプロイします。`cf target`でログインが出来ていることを確認してください。
 ```shell
-cf push api-<STUDENT_ID> -p target/apidemo-0.0.1-SNAPSHOT.jar
+$ cf push api-<STUDENT_ID> -p target/apidemo-0.0.1-SNAPSHOT.jar
 ```
 
 `tkaburagi`の部分は自身のSTUDENT_IDに置き換えてください。同じレスポンスがサーバから返ってくるでしょう。
 ```shell
-curl api-tkaburagi.apps.pcf.pcflab.jp  | jq
+$ curl api-tkaburagi.apps.pcf.pcflab.jp  | jq
 ```
 
 以上で最初のアプリケーションのデプロイは終了です。`cf`コマンドでコンテナのビルド、保存やアプリケーションの外部公開や運用監視の設定などの作業を完結し、**Source to URL**を実現しています。
@@ -161,7 +167,7 @@ curl api-tkaburagi.apps.pcf.pcflab.jp  | jq
 ### 基本的なcf cli
 アプリケーションをスケールアウトしたいときは、`cf scale`コマンドを利用します。
 ```shell
-cf scale -i 2 api-tkaburagi
+$ cf scale -i 2 api-tkaburagi
 ```
 ```console
 $ cf app api-tkaburagi
@@ -205,11 +211,11 @@ $ curl https://api-tkaburagi.apps.pcf.pcflab.jp | jq
 
 次に、`cf logs` を使ってアプリのログを取得します。
 ```shell
-cf logs api-tkaburagi --recent
+$ cf logs api-tkaburagi --recent
 ```
 `--recent`オプションをつけるとLoggregatorにバッファされている、最近のログをダンプできます。
 ```shell
-cf logs api-tkaburagi
+$ cf logs api-tkaburagi
 ```
 オプションなしだと、ログがストリーミングされます。この状態で別ターミナルで`curl`コマンドを実行しアプリのエンドポイントにアクセスしてみてください。
 
@@ -217,8 +223,8 @@ logがストリーミングされていることがわかります。PCFでは�
 
 その他にも`cf apps`や`cf app api-tkaburagi`などを実行すると自分のテナントのアプリ一覧や1アプリの詳細な情報が見れます。
 ```shell
-cf apps
-cf app api-tkaburagi
+$ cf apps
+$ cf app api-tkaburagi
 ```
 
 `cf -h`を実行するとヘルプを表示できますので、時間のある方は色々なコマンドを試してみてください。

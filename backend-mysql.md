@@ -28,7 +28,7 @@ postgresql-10-odb             standalone, general                               
 
 `cf create-service`コマンドでサービスインスタンスを作成します。`cf create-service <Service Nama> <Plan Nanme> <Service Instance Name`でSevice Brokerを使ってサービスインスタンスをプロビジョニングできます。
 ```shell
-cf create-service p.mysql db-small mysql
+$ cf create-service p.mysql db-small mysql
 ```
 作成にはしばらく時間がかかりますので、待っている間次に進んでください。
 
@@ -55,11 +55,6 @@ cf create-service p.mysql db-small mysql
 
 `src/main/java/com/example/apidemo`に`Entity`パッケージを作成し、新しいファイル`Book.java`を追加し下記のように編集します。
 ```java
-package com.example.apidemo.Entity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 @Entity
 @Table(name = "book")
 public class Book {
@@ -104,10 +99,6 @@ public class Book {
 ```
 `src/main/java/com/example/apidemo`に`repository/jpa`パッケージを作成し、新しいファイル`BookJpaRepository.java`を追加し下記のように編集します。
 ```java
-import com.example.demo.entity.Book;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 @Repository
 public interface BookJpaRepository extends JpaRepository<Book, String> {
     Book findBookById(final String id);
@@ -116,17 +107,6 @@ public interface BookJpaRepository extends JpaRepository<Book, String> {
 
 `src/main/java/com/example/apidemo`に`Config`パッケージを作成し、新しいファイル`DbCloudConfig.java`を追加し下記のように編集します。
 ```java
-import javax.sql.DataSource;
-
-import org.springframework.cloud.config.java.AbstractCloudConfig;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-
 @Configuration
 @EnableJpaRepositories(basePackages = "com.example.apidemo.repository.jpa")
 @Profile("cloud")
@@ -149,11 +129,6 @@ public class DbCloudConfig extends AbstractCloudConfig {
 
 `ApiController.java`を下記のように編集します。
 ```java
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 public class ApiController {
 
@@ -250,7 +225,7 @@ Updated: 2019-02-04T06:43:09Z
 
 次に、`cf bind-service`でMySQLインスタンスの接続情報をアプリケーションの環境変数にバインドします。
 ```shell
-cf bind-service api-tkaburagi mysql
+$ cf bind-service api-tkaburagi mysql
 ```
 
 `cf env`でセットされている環境変数を確認します。
@@ -324,7 +299,7 @@ No staging env variables have been set
 
 JDBCのURIパスワード、ユーザ名などがセットされていることがわかります。この環境変数はアプリケーションの起動時に読み込まれます。アプリケーションを`cf start`で起動します。
 ```shell
-cf start api-tkaburagi
+$ cf start api-tkaburagi
 ```
 
 起動したらアプリケーションのエンドポイントにリクエストを送り、デーベースからの値を取得します。
