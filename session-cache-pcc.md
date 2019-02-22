@@ -3,8 +3,8 @@
 
 ## PCCインスタンスのアップデート
 ```shell
-cf update-service pcc -t session-replication
-cf bind-service ui-tkaburagi pcc
+$ cf update-service pcc -t session-replication
+$ cf bind-service ui-tkaburagi pcc
 ```
 RedisもしくはPCCのインスタンスで`tag`に`session-replication`を持つインスタンスもしくはインスタンス名に`session-replication`が入っているインスタンスをbindするとHTTP SessionがRedisもしくはPCCに格納されます。上記のコマンドは前に作ったPCCのインスタんしに`session-replication`のタグを付与しています。
 
@@ -71,12 +71,6 @@ public class PccConfig {
 
 `UiController.java`を以下のように編集します。
 ```java     
-//省略
-
-import javax.servlet.http.HttpSession; //この行を追加
-
-//省略
-
 @RequestMapping(method = RequestMethod.GET, value = "/")
 public String home(String id, Model model, HttpSession session) throws Exception { //この行を変更
         log.info("Handling home");
