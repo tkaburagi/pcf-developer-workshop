@@ -280,7 +280,7 @@ curl https://api-tkaburagi.apps.pcf.pcflab.jp/actuator/env | jq
 #以下省略
 ```
 
-サービス名の`pcc`で`grep`などをすると`properties`で参照すべき値がわかるでしょう。アプリをビルドしてpushします。
+サービス名の`pcc`で`grep`などをすると`properties`で参照すべき値がわかるでしょう。アプリをビルドしてpushします。git
 ```shell
 $ ./mvnw clean package -DskipTests=true
 $ cf push --no-start

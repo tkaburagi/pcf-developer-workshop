@@ -18,10 +18,14 @@ $ fly --version
 4.2.2
 ```
 
-//TODO
+`fly`でConcourseへログインします。
 ```console
-$ fly login
+$ fly login -t ci -c https://concourse.sys.pas.ik.am/ -n handson-<student id>
 ```
+
+`https://concourse.sys.pas.ik.am/sky/login?redirect_uri=http://127.0.0.1:54840/auth/callback`のようなURLへのアクセスが指示されるはずなのでブラウザでアクセスをし、`CLOUD FOUNDRY`の認証から自身のログインIDでログインしていください。
+
+ログインが完了したら、ターミナルに戻り、`target saved`と表示されていればログイン成功です。
 
 ## Gir Repositoryの作成
 [Github](https://github.com)にログインし、`Repositories` -> `New`と進みます。
