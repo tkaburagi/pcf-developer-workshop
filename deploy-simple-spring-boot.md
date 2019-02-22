@@ -145,7 +145,7 @@ manifestを使ってデプロイします。ここではアプリケーション
 $ cf push
 ```
 
-このマニフェストをカレントディレクトリに置き`cf push`するとディレクトリ直下のmanifestを読み込み、アプリがデプロイされます。また、`cf push -f path/tomanifest.yml`のような形でマニフェストを指定することもできます。
+このマニフェストをカレントディレクトリに置き`cf push`するとディレクトリ直下のmanifestを読み込み、アプリがデプロイされます。また、`cf push -f path/to/manifest.yml`のような形でマニフェストを指定することもできます。
 次に`cf push`を使ってアプリケーションをPCF上にデプロイします。`cf target`でログインが出来ていることを確認してください。
 ```shell
 $ cf push api-<STUDENT_ID> -p target/apidemo-0.0.1-SNAPSHOT.jar
