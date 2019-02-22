@@ -110,7 +110,7 @@ management.cloudfoundry.skip-ssl-validation=true
 作ったアプリをビルドし、ローカルで稼働させてみます。
 ```shell
 $ ./mvnw package -Dmaven.test.skip=true
-$ java -jar target/demo-0.0.1-SNAPSHOT.jar
+$ java -jar target/apidemo-0.0.1-SNAPSHOT.jar
 ```
 
 ```shell
