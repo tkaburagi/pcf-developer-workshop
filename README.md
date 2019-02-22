@@ -16,7 +16,7 @@
 手順の中のソースコードにはimport文とpackage名は省略してあります。importがわからない場合は講師に都度確認をしてください。
 
 # 事前準備このハンズオンを実施するには以下のツールが必要です。
-1. [cf cli] (https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
+1. [cf cli](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 2. [git cli](https://git-scm.com/)
 3. [JDK 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
 4. [gfsh 9.6](https://network.pivotal.io/products/pivotal-gemfire#/releases/204094)
