@@ -10,15 +10,21 @@
 **ここまで完了したら進捗シートにチェックをしてください。**
 
 ## User Provided Serviceの作成
-```shell
-cf cups dynatrace-service -p "environmentid, apitoken, apiurl"
-cf bind-service api-tkaburagi dynatrace-service
-cf bind-service ui-tkaburagi dynatrace-service
-cf restage ui-tkaburagi
-cf restage api-tkaburagi
+```console
+$ cf cups dynatrace-service -p "environmentid, apitoken, apiurl" 
+environmentid> **************
+apitoken> **************
+apiurl> **************
+Creating user provided service dynatrace-service in org pivot-tkaburagi / space playground as tkaburagi@pivotal.io...
+OK
+
+$ cf bind-service api-tkaburagi dynatrace-service
+$ cf bind-service ui-tkaburagi dynatrace-service
+$ cf restage ui-tkaburagi
+$ cf restage api-tkaburagi
 ```
 
-`environmentid`, `apitoken`, `apiurl`には先ほどメモした内容を入力します。`apiurl`は`https://<envid>.live.dynatrace.com/api`のような形になります。
+対話式で入力する`environmentid`, `apitoken`, `apiurl`には先ほどメモした内容を入力します。`apiurl`は`https://<envid>.live.dynatrace.com/api`のような形になります。
 
 ## Dynatrace Dashboardへアクセス
 自分のアカウントでDynatraceにログインしてください。
