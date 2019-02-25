@@ -13,7 +13,7 @@
 * [アンケート](https://docs.google.com/forms/d/e/1FAIpQLSf9KHCcjvbMiHyqCk1a012-hGSM0yZVlUcHsmrmrMMzv8d8iw/viewform?usp=sf_link)
 
 # 注意点
-手順の中のソースコードにはimport文とpackage名は省略してあります。importがわからない場合は講師に都度確認をしてください。
+手順の中のソースコードにはimport文とpackage名は省略してあります。package名は上書きしないで生成したクラスのままにして下さい。importがわからない場合は講師に都度確認をしてください。
 
 # 事前準備
 このハンズオンを実施するには以下のツールが必要です。
