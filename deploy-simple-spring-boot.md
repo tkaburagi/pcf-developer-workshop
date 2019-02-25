@@ -13,10 +13,10 @@
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/sts-1.png)
 
 `Maven` -> `Existing Maven Projects`
-![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-1.png)
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/sts-2.png)
 
 `Browse`でダウンロードしたディレクトリを選択し、`Finish`をクリックするとインポートが開始します。
-![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-1.png)
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/sts-3.png)
 
 ## アプリの編集
 `pom.xml`を次のように編集します。
