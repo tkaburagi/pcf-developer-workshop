@@ -57,10 +57,6 @@ create region --name=ClusteredSpringSessions --type=PARTITION_HEAP_LRU
 
  `PccConfig.java`を追加し、以下のように編集します。
 ```java
-import org.springframework.data.gemfire.config.annotation.ClientCacheApplication;
-import org.springframework.session.data.gemfire.config.annotation.web.http.EnableGemFireHttpSession;
-import org.springframework.data.gemfire.config.annotation.EnableSecurity;
-
 @EnableGemFireHttpSession(poolName = "DEFAULT")
 @ClientCacheApplication
 @EnableSecurity
