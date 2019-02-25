@@ -8,6 +8,17 @@
 
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-1.png)
 
+プロジェクトを生成したら、IDEにインポートします。以下の手順は`Spring Tool Suite`の例です。
+`File` -> `Import`
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/sts-1.png)
+
+`Maven` -> `Existing Maven Projects`
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-1.png)
+
+`Browse`でダウンロードしたディレクトリを選択し、`Finish`をクリックするとインポートが開始します。
+![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-1.png)
+
+## アプリの編集
 `pom.xml`を次のように編集します。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

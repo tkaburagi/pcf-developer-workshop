@@ -31,6 +31,8 @@ curl: (6) Could not resolve host: api-tkaburagi.apps.internal
 
 ![image](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/img/boot-2.png)
 
+IDEへのインポートの方法は[簡単なアプリをデプロイする](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/deploy-simple-spring-boot.md)の章を参照して下さい。
+
 
 manifest.ymlを追加します。`name`の`tkaburagi`の部分は自分のIDに合わせて書き換えてください。
 ```yaml
