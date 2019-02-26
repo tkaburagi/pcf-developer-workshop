@@ -32,9 +32,9 @@ Updated: 2019-02-09T07:09:26Z
 
 セッションを格納するためのGemFireのRegionを新しく作ります。Region名はアプリ側から指定ができますが、デフォルトだと`ClusteredSpringSessions`というRegionになるため今回はそれを利用します。
 ```shell
-gfsh
+$ gfsh
 gfsh> connect --use-http=true --use-ssl --url=<GFSH_URL> --user=<CLUSTER_OPERATOR_USERNAME> --password=<CLUSTER_OPERATOR_PASSWD> --skip-ssl-validation
-create region --name=ClusteredSpringSessions --type=PARTITION_HEAP_LRU
+gfsh> create region --name=ClusteredSpringSessions --type=PARTITION_HEAP_LRU
 ```
 
 `connect`のユーザ名などは[こちら](https://github.com/tkaburagi/pcf-developer-workshop/blob/master/backend-pcc.md)を参考にしてください。
